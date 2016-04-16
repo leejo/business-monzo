@@ -1,0 +1,15 @@
+/META.yml
+/MYMETA.*
+/blib/
+/inc/
+/pm_to_blib
+/MANIFEST.bak
+/Makefile
+/Makefile.old
+*.old
+*.swp
+~$
+/Business-Mondo*tar.gz
+cover_db
+end_to_end.sh
+examples/
