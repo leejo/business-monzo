@@ -124,6 +124,102 @@ group {
         # no-op at present
         $c->render( text => '' );
     };
+
+    post '/webhooks' => sub {
+        my ( $c ) = @_;
+
+        my $account_id = $c->param( 'account_id' )
+            || return $c->render( status => 400, text => "account_id required" );
+
+        my $url = $c->param( 'url' )
+            || return $c->render( status => 400, text => "url required" );
+
+        $c->render( json => {
+            account_id => $account_id,
+            url        => $url,
+            id         => time,
+        } );
+    };
+
+    get '/webhooks' => sub {
+        my ( $c ) = @_;
+
+        my $account_id = $c->param( 'account_id' )
+            || return $c->render( status => 400, text => "account_id required" );
+
+        $c->render( json => {
+            webhooks => _webhooks( $account_id ),
+        } );
+    };
+
+    del '/webhooks/:webhook_id' => sub {
+        shift->render( json => {} );
+    };
+
+    post '/attachement/upload' => sub {
+        my ( $c ) = @_;
+
+        my $file_name = $c->param( 'file_name' )
+            || return $c->render( status => 400, text => "file_name required" );
+
+        my $file_type = $c->param( 'file_type' )
+            || return $c->render( status => 400, text => "file_type required" );
+
+        my $url = $c->req->url;
+
+        my $entity_id = "user_00009237hliZellUicKuG1";
+        $c->render( json => {
+            "file_url" => $url->base . "/file/$entity_id/LcCu4ogv1xW28OCcvOTL-foo.png",
+            "upload_url" => $url->base . "/upload/$entity_id/LcCu4ogv1xW28OCcvOTL-foo.png?AWSAccessKeyId=AKIAIR3IFH6UCTCXB5PQ\u0026Expires=1447353431\u0026Signature=k2QeDCCQQHaZeynzYKckejqXRGU%!D(MISSING)"
+        } );
+    };
+
+    post '/attachement/register' => sub {
+        my ( $c ) = @_;
+
+        my $external_id = $c->param( 'external_id' )
+            || return $c->render( status => 400, text => "external_id required" );
+
+        my $file_url = $c->param( 'file_url' )
+            || return $c->render( status => 400, text => "file_url required" );
+
+        my $file_type = $c->param( 'file_type' )
+            || return $c->render( status => 400, text => "file_type required" );
+
+        $c->render( json => {
+            "attachment" => {
+                "id" => "attach_00009238aOAIvVqfb9LrZh",
+                "user_id" => "user_00009238aMBIIrS5Rdncq9",
+                "external_id" => "tx_00008zIcpb1TB4yeIFXMzx",
+                "file_url" => $file_url,
+                "file_type" => "image/png",
+                "created" => "2015-11-12T18:37:02Z"
+            }
+        } );
+    };
+
+    post '/attachement/deregister' => sub {
+        my ( $c ) = @_;
+
+        my $id = $c->param( 'id' )
+            || return $c->render( status => 400, text => "id required" );
+
+        $c->render( json => {} );
+    }
+};
+
+# convenience methods for file upload emulation, these endpoints
+# do not exist in the Mondo API, they are here to fake uploads
+get '/file/:entity_id/:file_name' => sub {
+    my ( $c ) = @_;
+
+    $c->render( text => "OK" );
+};
+
+post '/upload/:entity_id/:file_name' => sub {
+    my ( $c ) = @_;
+
+    $c->render( text => "OK" );
 };
 
 sub _convert_map_params_to_hash {
@@ -202,6 +298,25 @@ sub _merchant {
         "name" => "The De Beauvoir Deli Co.",
         "category" => "eating_out"
     };
+}
+
+sub _webhooks {
+    my ( $account_id ) = @_;
+
+    $account_id //= "acc_000091yf79yMwNaZHhHGzp";
+
+    return [
+        {
+            "account_id" => $account_id,
+            "id" => "webhook_000091yhhOmrXQaVZ1Irsv",
+            "url" => "http://example.com/callback"
+        },
+        {
+            "account_id" => $account_id,
+            "id" => "webhook_000091yhhzvJSxLYGAceC9",
+            "url" => "http://example2.com/anothercallback"
+        },
+    ];
 }
 
 app->start;
