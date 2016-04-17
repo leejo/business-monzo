@@ -20,6 +20,9 @@ plugin 'OAuth2::Server' => {
             scopes                => {
             },
         },
+    },
+    users => {
+        leejo => "Weeeee",
     }
 };
 
