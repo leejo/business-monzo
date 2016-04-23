@@ -76,15 +76,10 @@ Returns a json string representation of the object.
 Returns a new instanced of the object populated with the attributes having called
 the API
 
-    my $populate_transaction = $transaction->get;
+    my $populated_transaction = $transaction->get;
 
 This is for when you have instantiated an object with the id, so calling the API
 will retrieve the full details for the entity.
-
-If the data returned from Mondo contains attributes not available on the object
-then warnings will be raised for those attributes that couldn't be set - if you
-see any of these please raise an issue against the dist as these are likely due
-to updates to the Mondo API.
 
 =cut
 
