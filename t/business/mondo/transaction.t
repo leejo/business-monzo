@@ -31,10 +31,20 @@ can_ok(
         TO_JSON
 
         id
+        description
+        notes
+        account_balance
+        amount
+        metadata
+        is_load
+        settled
+        merchant
+        currency
+        created
     /,
 );
 
-is( $Transaction->url,'https://api.getmondo.co.uk/transaction/1','url' );
+is( $Transaction->url,'https://api.getmondo.co.uk/transactions/1','url' );
 
 no warnings 'redefine';
 

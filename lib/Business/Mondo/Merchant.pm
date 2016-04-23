@@ -16,18 +16,28 @@ with 'Business::Mondo::Utils';
 
 use Types::Standard qw/ :all /;
 use Business::Mondo::Address;
+use Business::Mondo::Exception;
 
 =head1 ATTRIBUTES
 
-    id
+The Merchant class has the following attributes (with their type).
 
-    address
+    id (Str)
+    group_id (Str)
+    logo (Str)
+    emoji (Str)
+    name (Str)
+    category (Str)
+    address (Business::Mondo::Address)
+    created (DateTime)
+
+Note that if a HashRef or Str is passed to ->address it will be coerced
+into a Business::Mondo::Address object. When a Str is passed to ->created
+this will be coerced to a DateTime object.
 
 =cut
 
-has [ qw/
-    id
-/ ] => (
+has [ qw/ id group_id logo emoji name category / ] => (
     is  => 'rw',
     isa => Str,
 );
@@ -50,9 +60,49 @@ has address => (
     },
 );
 
+has created => (
+    is      => 'rw',
+    isa     => Maybe[InstanceOf['DateTime']],
+    coerce  => sub {
+        my ( $args ) = @_;
+
+        if ( ! ref( $args ) ) {
+            $args = DateTime::Format::DateParse->parse_datetime( $args );
+        }
+
+        return $args;
+    },
+);
+
 =head1 Operations on an merchant
 
-=head2 get
+None at present
+
+=cut
+
+sub get {
+    Business::Mondo::Exception->throw({
+        message => "Mondo API does not currently support getting merchant data",
+    });
+}
+
+=head1 SEE ALSO
+
+L<Business::Mondo::Mondo>
+
+L<Business::Mondo::Client>
+
+=head1 AUTHOR
+
+Lee Johnson - C<leejo@cpan.org>
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself. If you would like to contribute documentation,
+features, bug fixes, or anything else then please raise an issue / pull request:
+
+    https://github.com/leejo/business-mondo
 
 =cut
 

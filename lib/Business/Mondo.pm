@@ -131,23 +131,18 @@ Get a transaction
 
     transactions
 
-Get a [list of] transactions
+Get a list of transactions
 
-Will return a L<Business::Mondo::Paginator> object (when calling endpoints
-that return lists of items) or a Business::Mondo:: object for the transaction,
-Agency, etc.
+Will return a L<Business::Mondo::Transaction> objects
 
 %query_params refers to the possible query params as shown in the Mondo API
 documentation. For example: limit=100. You can pass DateTime objects
 through and these will be correctly changed into strings when calling the API:
 
     # transactions in the previous month
-    my $paginator = $mondo->transactions(
+    my @transactions = $mondo->transactions(
         since => DateTime->now->subtract( months => 1 ),
     );
-
-Refer to the L<Business::Mondo::Paginator> documentation for what to do with
-the returned paginator object.
 
 =cut
 
@@ -172,8 +167,6 @@ live endpoint).
 L<Business::Mondo::Client>
 
 L<Business::Mondo::Transaction>
-
-L<Business::Mondo::Paginator>
 
 =head1 AUTHOR
 

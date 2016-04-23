@@ -16,13 +16,12 @@ with 'Business::Mondo::Utils';
 with 'Business::Mondo::Version';
 
 use Business::Mondo::Exception;
-use Business::Mondo::Paginator;
 use Business::Mondo::Transaction;
 
 use MIME::Base64 qw/ encode_base64 /;
 use LWP::UserAgent;
 use JSON ();
-use Carp qw/ carp confess /;
+use Carp qw/ carp /;
 
 =head1 ATTRIBUTES
 
@@ -52,22 +51,22 @@ has api_url => (
 sub _get_transactions {
     my ( $self,$params ) = @_;
 
-    my $issues = $self->_api_request( 'GET','transactions' );
+    my $transactions = $self->_api_request( 'GET','transactions' );
+    my @transactions;
 
-    my $Paginator = Business::Mondo::Paginator->new(
-        links  => {
-            next     => $issues->{NextURL},
-            previous => $issues->{PreviousURL},
-        },
-        client  => $self,
-        class   => 'Business::Mondo::Transaction',
-        objects => [ map { Business::Mondo::Transaction->new(
-            client => $self,
-            url    => $_,
-        ) } @{ $issues->{Items} } ],
-    );
+    foreach my $transaction ( @{ $transactions->{transactions} // [] } ) {
 
-    return $Paginator;
+        push(
+            @transactions,
+            Business::Mondo::Transaction->new(
+                client => $self,
+                %{ $transaction },
+            )
+        );
+
+    }
+
+    return @transactions;
 }
 
 sub _get_transaction {
@@ -75,12 +74,12 @@ sub _get_transaction {
 
     my $data = $self->_api_request( 'GET',"transactions/" . $params->{id} );
 
-    my $issue = Business::Mondo::Transaction->new(
+    my $transaction = Business::Mondo::Transaction->new(
         client => $self,
         %{ $data },
     );
 
-    return $issue;
+    return $transaction;
 }
 
 =head1 METHODS
@@ -91,11 +90,9 @@ sub _get_transaction {
 
 Make a request to the Mondo API:
 
-    my $data = $Client->api_get( 'Issues',\%params );
+    my $data = $Client->api_get( 'foo',\%params );
 
-May return a L<Business::Mondo::Paginator> object (when calling endpoints
-that return lists of items) or a Business::Mondo:: object for the Issue,
-Agency, etc.
+May return a list of L<Business::Mondo::foo> objects
 
 =cut
 

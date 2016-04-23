@@ -15,7 +15,6 @@ use Moo;
 use Carp qw/ confess carp /;
 use JSON ();
 use Try::Tiny;
-use Business::Mondo::Paginator;
 
 =head1 ATTRIBUTES
 
@@ -53,7 +52,7 @@ has [ qw/ url_no_id / ] => (
         return join(
             '/',
             $self->client->api_url,
-            lc( ( split( ':',ref( $self ) ) )[-1] ),
+            lc( ( split( ':',ref( $self ) ) )[-1] ) . 's',
         );
     },
 );
@@ -64,25 +63,22 @@ has [ qw/ url_no_id / ] => (
 
 Returns a hash representation of the object.
 
-    my %data = $Issue->to_hash;
+    my %data = $transaction->to_hash;
 
 =head2 to_json
 
 Returns a json string representation of the object.
 
-    my $json = $Issue->to_json;
+    my $json = $transaction->to_json;
 
 =head2 get
 
 Populates the object with its attributes (calls the API)
 
-    $Issue->get
+    $transaction->get
 
-As the data returned in the call to list objects does not contain the full data
-of the objects (it only contains lightweight information, such as the URLs of
-the objects you are interested in) you need to call the ->get method to
-populate the attributes on an object. Really the Paginator just contains a list
-of URLs and an easy way to navigate through them.
+This is for when you have instantiated an object with the id, so calling the API
+will retrieve the full details for the entity.
 
 If the data returned from Mondo contains attributes not available on the object
 then warnings will be raised for those attributes that couldn't be set - if you
@@ -122,76 +118,6 @@ sub get {
     }
 
     return $self;
-}
-
-sub _parse_envelope_data {
-    my ( $self,$data ) = @_;
-
-    return $self if ! ref( $data );
-
-    my $Envelope = Business::Mondo::Envelope->new(
-        client => $self->client,
-        %{ $data }
-    );
-
-    foreach my $attr ( keys( %{ $Envelope->Entity // {} } ) ) {
-        try { $self->$attr( $Envelope->Entity->{$attr} ); }
-        catch {
-            carp( "Couldn't set $attr on @{[ ref( $self ) ]}: $_" );
-        };
-    }
-
-    return $self;
-}
-
-sub _create {
-    my ( $self,$update,$class,$cb ) = @_;
-
-    if ( ! $update && $self->id ) {
-        Business::Mondo::Exception->throw({
-            message  => "Can't create $class when id is already set",
-        });
-    } elsif ( $update && ! $self->id ) {
-        Business::Mondo::Exception->throw({
-            message  => "Can't update $class if id is not set",
-        });
-    }
-
-    my $post_data = $cb->( $self );
-
-    return $self->_parse_envelope_data(
-        $self->client->api_post( $class,$post_data )
-    );
-}
-
-sub _paginated_items {
-    my ( $self,$class,$item_class,$item_class_singular ) = @_;
-
-    my $items = $self->client->api_get(
-        "$class/@{[ $self->id ]}/$item_class",
-    );
-
-    my $b_mondo_class = "Business::Mondo::$item_class_singular";
-
-    my $Paginator = Business::Mondo::Paginator->new(
-        links  => {
-            next     => $items->{NextURL},
-            previous => $items->{PreviousURL},
-        },
-        client  => $self->client,
-        class   => 'Business::Mondo::Issue',
-        objects => [ map { $b_mondo_class->new(
-            client => $self->client,
-            %{ $_ },
-        ) } @{ $items->{Items} } ],
-    );
-
-    return $Paginator;
-}
-
-sub update {
-    my ( $self ) = @_;
-    return $self->create( 'update' );
 }
 
 =head1 AUTHOR
