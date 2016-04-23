@@ -36,7 +36,7 @@ has client => (
 );
 
 has [ qw/ url / ] => (
-    is      => 'rw',
+    is      => 'ro',
     lazy    => 1,
     default => sub {
         my ( $self ) = @_;
@@ -45,7 +45,7 @@ has [ qw/ url / ] => (
 );
 
 has [ qw/ url_no_id / ] => (
-    is      => 'rw',
+    is      => 'ro',
     lazy    => 1,
     default => sub {
         my ( $self ) = @_;
@@ -73,9 +73,10 @@ Returns a json string representation of the object.
 
 =head2 get
 
-Populates the object with its attributes (calls the API)
+Returns a new instanced of the object populated with the attributes having called
+the API
 
-    $transaction->get
+    my $populate_transaction = $transaction->get;
 
 This is for when you have instantiated an object with the id, so calling the API
 will retrieve the full details for the entity.
@@ -107,17 +108,12 @@ sub get {
     my ( $self,$sub_key ) = @_;
 
     my $data = $self->client->api_get( $self->url );
-
     $data = $data->{$sub_key} if $sub_key;
 
-    foreach my $attr ( keys( %{ $data } ) ) {
-        try { $self->$attr( $data->{$attr} ); }
-        catch {
-            carp( "Couldn't set $attr on @{[ ref( $self ) ]}: $_" );
-        };
-    }
-
-    return $self;
+    return $self->new(
+        client => $self->client,
+        %{ $data },
+    );
 }
 
 =head1 AUTHOR

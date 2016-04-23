@@ -38,12 +38,12 @@ this will be coerced to a DateTime object.
 =cut
 
 has [ qw/ id group_id logo emoji name category / ] => (
-    is  => 'rw',
+    is  => 'ro',
     isa => Str,
 );
 
 has address => (
-    is => 'rw',
+    is => 'ro',
     isa => Maybe[InstanceOf['Business::Mondo::Address']],
     coerce  => sub {
 
@@ -61,7 +61,7 @@ has address => (
 );
 
 has created => (
-    is      => 'rw',
+    is      => 'ro',
     isa     => Maybe[InstanceOf['DateTime']],
     coerce  => sub {
         my ( $args ) = @_;
@@ -88,7 +88,7 @@ sub get {
 
 =head1 SEE ALSO
 
-L<Business::Mondo::Mondo>
+L<Business::Mondo>
 
 L<Business::Mondo::Client>
 

@@ -83,7 +83,7 @@ no warnings 'redefine';
     };
 };
 
-ok( $Transaction->get,'->get' );
+ok( $Transaction = $Transaction->get,'->get' );
 isa_ok( $Transaction->merchant,'Business::Mondo::Merchant' );
 isa_ok( $Transaction->merchant->address,'Business::Mondo::Address' );
 isa_ok( $Transaction->currency,'Data::Currency' );

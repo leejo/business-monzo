@@ -125,24 +125,34 @@ has client => (
 
 =head1 METHODS
 
-    transaction
-
-Get a transaction
-
-    transactions
-
-Get a list of transactions
-
-Will return a L<Business::Mondo::Transaction> objects
-
-%query_params refers to the possible query params as shown in the Mondo API
-documentation. For example: limit=100. You can pass DateTime objects
+In the following %query_params refers to the possible query params as shown in
+the Mondo API documentation. For example: limit=100. You can pass DateTime objects
 through and these will be correctly changed into strings when calling the API:
 
     # transactions in the previous month
     my @transactions = $mondo->transactions(
         since => DateTime->now->subtract( months => 1 ),
     );
+
+=head2 transaction
+
+    $mondo->transaction( %query_params );
+
+Get a transaction. Will return a L<Business::Mondo::Transaction> object
+
+=head2 transactions
+
+    $mondo->transactions( %query_params );
+
+Get a list of transactions. Will return a list of L<Business::Mondo::Transaction>
+objects
+
+=head2 accounts
+
+    $mondo->accounts( %query_params );
+
+Get a list of accounts. Will return a list of L<Business::Mondo::Account>
+objects
 
 =cut
 
@@ -156,6 +166,11 @@ sub transaction {
     return $self->client->_get_transaction( \%params );
 }
 
+sub accounts {
+    my ( $self,%params ) = @_;
+    return $self->client->_get_accounts( \%params );
+}
+
 =head1 EXAMPLES
 
 See the t/002_end_to_end.t test included with this distribution. you can run
@@ -167,6 +182,12 @@ live endpoint).
 L<Business::Mondo::Client>
 
 L<Business::Mondo::Transaction>
+
+L<Business::Mondo::Account>
+
+L<Business::Mondo::Merchant>
+
+L<Business::Mondo::Address>
 
 =head1 AUTHOR
 

@@ -48,27 +48,6 @@ has api_url => (
     },
 );
 
-sub _get_transactions {
-    my ( $self,$params ) = @_;
-
-    my $transactions = $self->_api_request( 'GET','transactions' );
-    my @transactions;
-
-    foreach my $transaction ( @{ $transactions->{transactions} // [] } ) {
-
-        push(
-            @transactions,
-            Business::Mondo::Transaction->new(
-                client => $self,
-                %{ $transaction },
-            )
-        );
-
-    }
-
-    return @transactions;
-}
-
 sub _get_transaction {
     my ( $self,$params ) = @_;
 
@@ -80,6 +59,29 @@ sub _get_transaction {
     );
 
     return $transaction;
+}
+
+sub _get_transactions {
+    return shift->_get_entities( shift,'transaction' );
+}
+
+sub _get_accounts {
+    return shift->_get_entities( shift,'account' );
+}
+
+sub _get_entities {
+    my ( $self,$params,$entity ) = @_;
+
+    my $plural = $entity . 's';
+    my $data   = $self->_api_request( 'GET',$plural );
+    my $class  = "Business::Mondo::" . ucfirst( $entity );
+    my @objects;
+
+    foreach my $e ( @{ $data->{$plural} // [] } ) {
+        push( @objects,$class->new( client => $self,%{ $e } ) );
+    }
+
+    return @objects;
 }
 
 =head1 METHODS

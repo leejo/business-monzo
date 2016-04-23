@@ -43,27 +43,27 @@ to ->created this will be coerced to a DateTime object.
 =cut
 
 has [ qw/ id description notes / ] => (
-    is  => 'rw',
+    is  => 'ro',
     isa => Str,
 );
 
 has [ qw/ account_balance amount / ] => (
-    is  => 'rw',
+    is  => 'ro',
     isa => Int,
 );
 
 has [ qw/ metadata / ] => (
-    is  => 'rw',
+    is  => 'ro',
     isa => HashRef,
 );
 
 has [ qw/ is_load settled / ] => (
-    is  => 'rw',
+    is  => 'ro',
     isa => Bool,
 );
 
 has merchant => (
-    is      => 'rw',
+    is      => 'ro',
     isa     => Maybe[InstanceOf['Business::Mondo::Merchant']],
     coerce  => sub {
         my ( $args ) = @_;
@@ -85,7 +85,7 @@ has merchant => (
 );
 
 has currency => (
-    is      => 'rw',
+    is      => 'ro',
     isa     => Maybe[InstanceOf['Data::Currency']],
     coerce  => sub {
         my ( $args ) = @_;
@@ -101,7 +101,7 @@ has currency => (
 );
 
 has created => (
-    is      => 'rw',
+    is      => 'ro',
     isa     => Maybe[InstanceOf['DateTime']],
     coerce  => sub {
         my ( $args ) = @_;
@@ -126,7 +126,7 @@ sub get {
 
 =head1 SEE ALSO
 
-L<Business::Mondo::Mondo>
+L<Business::Mondo>
 
 L<Business::Mondo::Client>
 

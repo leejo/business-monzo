@@ -1,12 +1,12 @@
-package Business::Mondo::Address;
+package Business::Mondo::Account;
 
 =head1 NAME
 
-Business::Mondo::Address
+Business::Mondo::Account
 
 =head1 DESCRIPTION
 
-A class for a Mondo address, extends L<Business::Mondo::Resource>
+A class for a Mondo account, extends L<Business::Mondo::Resource>
 
 =cut
 
@@ -20,29 +20,37 @@ use Business::Mondo::Exception;
 
 =head1 ATTRIBUTES
 
-The Address class has the following attributes (with their type).
+The Account class has the following attributes (with their type).
 
-    address (Str)
-    city (Str)
-    country (Str)
-    postcode (Str)
-    region (Str)
-    longitude (Num)
-    latitude (Num)
+    id (Str)
+    description (Str)
+    created (DateTime)
+
+Note that when a Str is passed to ->created this will be coerced
+to a DateTime object.
 
 =cut
 
-has [ qw/ address city country postcode region / ] => (
+has [ qw/ id description / ] => (
     is  => 'ro',
     isa => Str,
 );
 
-has [ qw/ latitude longitude / ] => (
-    is  => 'ro',
-    isa => Num,
+has created => (
+    is      => 'ro',
+    isa     => Maybe[InstanceOf['DateTime']],
+    coerce  => sub {
+        my ( $args ) = @_;
+
+        if ( ! ref( $args ) ) {
+            $args = DateTime::Format::DateParse->parse_datetime( $args );
+        }
+
+        return $args;
+    },
 );
 
-=head1 Operations on an address
+=head1 Operations on an account
 
 None at present
 
@@ -50,13 +58,13 @@ None at present
 
 sub url {
     Business::Mondo::Exception->throw({
-        message => "Mondo API does not currently support getting address data",
+        message => "Mondo API does not currently support getting account data",
     });
 }
 
 sub get {
     Business::Mondo::Exception->throw({
-        message => "Mondo API does not currently support getting address data",
+        message => "Mondo API does not currently support getting account data",
     });
 }
 
