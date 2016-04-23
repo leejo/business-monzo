@@ -10,15 +10,14 @@ use Data::Dumper;
 $ENV{MOJO_LOG_LEVEL} = 'debug';
 
 plugin 'OAuth2::Server' => {
-    access_token_ttl     => 21600,
-    authorize_route        => '/',    
+    access_token_ttl   => 21600,
+    authorize_route    => '/',
     access_token_route => '/oauth2/token',
-    jwt_secret                 => "ThisIsMyMondoJWTSecret",
-    clients                        => {
+    jwt_secret         => "ThisIsMyMondoJWTSecret",
+    clients            => {
         test_client => {
             client_secret => 'test_client_secret',
-            scopes                => {
-            },
+            scopes        => {},
         },
     },
     users => {
