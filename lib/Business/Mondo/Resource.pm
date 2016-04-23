@@ -76,7 +76,7 @@ Returns a json string representation of the object.
 Returns a new instanced of the object populated with the attributes having called
 the API
 
-    my $populated_transaction = $transaction->get;
+    my $populated_object = $object->get;
 
 This is for when you have instantiated an object with the id, so calling the API
 will retrieve the full details for the entity.

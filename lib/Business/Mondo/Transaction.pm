@@ -118,10 +118,49 @@ has created => (
 
 =head2 get
 
+Returns a new instanced of the object populated with the attributes having called
+the API
+
+    my $populated_transaction = $transaction->get;
+
+This is for when you have instantiated an object with the id, so calling the API
+will retrieve the full details for the entity.
+
 =cut
 
 sub get {
     shift->SUPER::get( 'transaction' );
+}
+
+=head2 annotate
+
+Returns a new instanced of the object with annotated data having called the API
+
+    my $annotated_transaction = $transaction->annotate(
+        foo => "bar",
+        baz => "boz,
+    );
+
+=cut
+
+sub annotate {
+    my ( $self,%annotations ) = @_;
+
+    %annotations = map {
+        +"metadata[$_]" => $annotations{$_}
+    } keys %annotations;
+
+    my $data = $self->client->api_patch( $self->url,\%annotations );
+    $data = $data->{transaction};
+
+    return $self->new(
+        client => $self->client,
+        %{ $data },
+    );
+}
+
+sub annotations {
+    return shift->metadata;
 }
 
 =head1 SEE ALSO

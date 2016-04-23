@@ -113,6 +113,11 @@ sub api_delete {
     return $self->_api_request( 'DELETE',$path,$params );
 }
 
+sub api_patch {
+    my ( $self,$path,$params ) = @_;
+    return $self->_api_request( 'PATCH',$path,$params );
+}
+
 sub _api_request {
     my ( $self,$method,$path,$params ) = @_;
 
@@ -123,7 +128,7 @@ sub _api_request {
     $ua->agent( $self->user_agent );
 
     $path = $self->_add_query_params( $path,$params )
-        if $method eq 'GET';
+        if $method =~ /GET|PATCH/;
 
     my $req = $self->_build_request( $method,$path );
 

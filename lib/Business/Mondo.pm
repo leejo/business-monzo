@@ -24,7 +24,7 @@ B<with this perldoc>, as the official API documentation explains in more depth
 some of the functionality including required / optional parameters for certain
 methods.
 
-Please note this library is a work in progress
+Please note this library is very much a work in progress, as is the Mondo API.
 
 =head1 SYNOPSIS
 

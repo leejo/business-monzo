@@ -48,8 +48,34 @@ is( $Transaction->url,'https://api.getmondo.co.uk/transactions/1','url' );
 
 no warnings 'redefine';
 
-*Business::Mondo::Client::api_get = sub {
-    {
+*Business::Mondo::Client::api_get = sub { _transaction() };
+
+ok( $Transaction = $Transaction->get,'->get' );
+isa_ok( $Transaction->merchant,'Business::Mondo::Merchant' );
+isa_ok( $Transaction->merchant->address,'Business::Mondo::Address' );
+isa_ok( $Transaction->currency,'Data::Currency' );
+isa_ok( $Transaction->created,'DateTime' );
+
+*Business::Mondo::Client::api_patch = sub { _transaction( $_[2] ) };
+ok( $Transaction = $Transaction->annotate( foo => 1, bar => 2 ),'->annotate' );
+cmp_deeply(
+    $Transaction->annotations,
+    { foo => 1, bar => 2 },
+    '->annotations'
+);
+
+done_testing();
+
+sub _transaction {
+    my ( $metadata ) = @_;
+
+    $metadata = { map {
+        my $key = $_;
+        $key =~ s/^metadata\[(\w+)\]$/$1/;
+        $key => $metadata->{$_};
+    } keys %{ $metadata // {} } };
+
+    return {
         "transaction" => {
             "account_balance" => 13013,
             "amount"          => -510,
@@ -75,20 +101,12 @@ no warnings 'redefine';
                 "name"  => "The De Beauvoir Deli Co.",
                 "category" => "eating_out"
             },
-            "metadata" => {},
+            "metadata" => $metadata // {},
             "notes"    => "Salmon sandwich 🍞",
             "is_load"  => JSON::false,
             "settled"  => JSON::true
         }
     };
-};
-
-ok( $Transaction = $Transaction->get,'->get' );
-isa_ok( $Transaction->merchant,'Business::Mondo::Merchant' );
-isa_ok( $Transaction->merchant->address,'Business::Mondo::Address' );
-isa_ok( $Transaction->currency,'Data::Currency' );
-isa_ok( $Transaction->created,'DateTime' );
-
-done_testing();
+}
 
 # vim: ts=4:sw=4:et
