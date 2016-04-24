@@ -73,7 +73,7 @@ sub test_transaction {
     $mock->mock( 'content',sub { _transactions_json() } );
 
     isa_ok(
-        $Transaction = ( $Mondo->transactions )[1],
+        $Transaction = ( $Mondo->transactions( account_id => 1 ) )[1],
         'Business::Mondo::Transaction'
     );
 }

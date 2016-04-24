@@ -68,14 +68,15 @@ sub _get_transaction {
 
     my $transaction = Business::Mondo::Transaction->new(
         client => $self,
-        %{ $data },
+        %{ $data->{transaction} },
     );
 
     return $transaction;
 }
 
 sub _get_transactions {
-    return shift->_get_entities( shift,'transaction' );
+    my ( $self,$params ) = @_;
+    return $self->_get_entities( $params,'transaction' );
 }
 
 sub _get_accounts {
@@ -86,7 +87,7 @@ sub _get_entities {
     my ( $self,$params,$entity ) = @_;
 
     my $plural = $entity . 's';
-    my $data   = $self->_api_request( 'GET',$plural );
+    my $data   = $self->_api_request( 'GET',$plural,$params );
     my $class  = "Business::Mondo::" . ucfirst( $entity );
     my @objects;
 

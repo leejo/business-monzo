@@ -79,7 +79,7 @@ group {
         my $tid = $c->param( 'transaction_id' );
 
         $c->render( json => {
-            "transaction" => _transactions( $c->param( 'expand[]' ) )->[$tid - 1],
+            "transaction" => _transactions( $c->param( 'expand[]' ) )->[1],
         } );
     };
 
@@ -124,7 +124,7 @@ group {
         }
 
         # no-op at present
-        $c->render( text => '' );
+        $c->render( json => {} );
     };
 
     post '/webhooks' => sub {
@@ -137,9 +137,11 @@ group {
             || return $c->render( status => 400, text => "url required" );
 
         $c->render( json => {
-            account_id => $account_id,
-            url        => $url,
-            id         => time,
+            webhook => {
+                account_id => $account_id,
+                url        => $url,
+                id         => time,
+            }
         } );
     };
 
@@ -230,7 +232,7 @@ sub _convert_map_params_to_hash {
     # converts { params[foo] => bar } to { foo => bar }
     # (this is horrible! why not just send JSON in the request body?)
 
-    my $params = $c->req->query_params->to_hash;
+    my $params = $c->req->params->to_hash;
 
     my %extracted_params =
         map { my $v = $params->{$_}; s/^$prefix\[//g; chop; $_ => $v }
@@ -243,7 +245,10 @@ sub _transactions {
     my ( $expand,$metadata ) = @_;
 
     $expand   //= 'none';
-    $metadata //= {};
+    $metadata //= {
+        stuff      => 'yes',
+        more_stuff => 'yep',
+    };
 
     return [
         {
@@ -259,7 +264,7 @@ sub _transactions {
             "metadata" => $metadata,
             "notes" => "Salmon sandwich 🍞",
             "is_load" => Mojo::JSON::false,
-            "settled" => Mojo::JSON::true,
+            "settled" => '2015-08-23T12:20:18Z',
         },
         {
             "account_balance" => 12334,
@@ -274,7 +279,7 @@ sub _transactions {
             "metadata" => $metadata,
             "notes" => "",
             "is_load" => Mojo::JSON::false,
-            "settled" => Mojo::JSON::true,
+            "settled" => '2015-08-23T12:20:18Z',
             "category" => "eating_out"
         },
     ];

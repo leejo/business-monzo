@@ -160,6 +160,13 @@ objects
 
 sub transactions {
     my ( $self,%params ) = @_;
+
+    # transactions requires account_id, whereas transaction doesn't
+    # the Mondo API is a little inconsistent at this point...
+    $params{account_id} || Business::Mondo::Exception->throw({
+        message => "transactions requires params: account_id",
+    });
+
     return $self->client->_get_transactions( \%params );
 }
 

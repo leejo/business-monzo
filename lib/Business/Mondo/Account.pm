@@ -107,7 +107,7 @@ sub add_feed_item {
         %params,
     );
 
-    return $self->client->api_post( '/feed',\%post_params );
+    return $self->client->api_post( 'feed',\%post_params );
 }
 
 =head2 register_webhook
@@ -129,11 +129,11 @@ sub register_webhook {
     });
 
     my %post_params = (
-        url        => $params{url},
+        url        => $params{callback_url},
         account_id => $self->id,
     );
 
-    my $data = $self->client->api_post( '/feed',\%post_params );
+    my $data = $self->client->api_post( 'webhooks',\%post_params );
 
     return Business::Mondo::Webhook->new(
         client       => $self->client,
@@ -155,7 +155,7 @@ sub webhooks {
     my ( $self ) = @_;
 
     my $data = $self->client->api_get(
-        '/webhooks',{ account_id => $self->id }
+        'webhooks',{ account_id => $self->id }
     );
 
     my @webhooks;
