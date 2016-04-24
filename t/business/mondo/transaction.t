@@ -6,7 +6,6 @@ use warnings;
 use Test::Most;
 use Test::Deep;
 use Test::Exception;
-use JSON;
 
 use Business::Mondo::Client;
 
@@ -107,7 +106,7 @@ sub _transaction {
             },
             "metadata" => $metadata // {},
             "notes"    => "Salmon sandwich 🍞",
-            "is_load"  => JSON::false,
+            "is_load"  => Cpanel::JSON::XS::false,
             "settled"  => "2015-08-22T12:20:18Z",
         }
     };

@@ -7,7 +7,6 @@ use Test::Most;
 use Test::Deep;
 use Test::MockObject;
 use Test::Exception;
-use JSON;
 
 # this makes Business::Mondo::Exception show a stack
 # trace when any error is thrown so i don't have to keep

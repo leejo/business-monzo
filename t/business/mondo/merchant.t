@@ -6,7 +6,6 @@ use warnings;
 use Test::Most;
 use Test::Deep;
 use Test::Exception;
-use JSON;
 
 use Business::Mondo::Client;
 
