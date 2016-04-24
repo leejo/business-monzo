@@ -53,12 +53,6 @@ has created => (
 
 =head1 Operations on an account
 
-=head2 add_feed_item
-
-=head2 register_webhook
-
-=head2 webhooks
-
 =cut
 
 sub url {
@@ -72,6 +66,27 @@ sub get {
         message => "Mondo API does not currently support getting account data",
     });
 }
+
+=head2 add_feed_item
+
+Adds a feed item to the Account. Returns true on success, otherwise will throw
+an error. Note the required parameters:
+
+    $Account->add_feed_item(
+        account_id => $id,   # defaults to $Account->id,
+        type       => $type, # defaults to 'basic'
+        url        => $url,  # optional, the URL to open when the item is tapped
+        params => {
+            title            => $title, # REQUIRED
+            image_url        => $url,   # REQUIRED
+            body             => $body_text, # optional
+            background_color => $hex_value, # optional
+            title_color      => $hex_value, # optional
+            body_color       => $hex_value, # optional
+        }
+    );
+
+=cut
 
 sub add_feed_item {
     my ( $self,%params ) = @_;
@@ -95,6 +110,17 @@ sub add_feed_item {
     return $self->client->api_post( '/feed',\%post_params );
 }
 
+=head2 register_webhook
+
+Registers a webhook against the Account. Returns a Business::Mondo::Webhook
+object. Note the required parameters:
+
+    my $Webhook = $Account->webhooks(
+        callback_url => 'https://www.example.com/mondo/callback' # REQUIRED
+    );
+
+=cut
+
 sub register_webhook {
     my ( $self,%params ) = @_;
 
@@ -116,6 +142,14 @@ sub register_webhook {
         account      => $self,
     );
 }
+
+=head2 webhooks
+
+Returns a list of Business::Mondo::Webhook objects linked to the Account
+
+    my @webhooks = $Account->webhooks
+
+=cut
 
 sub webhooks {
     my ( $self ) = @_;

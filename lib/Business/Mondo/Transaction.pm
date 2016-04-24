@@ -118,7 +118,7 @@ has created => (
 
 =head2 get
 
-Returns a new instanced of the object populated with the attributes having called
+Returns a new instance of the object populated with the attributes having called
 the API
 
     my $populated_transaction = $transaction->get;
@@ -134,7 +134,7 @@ sub get {
 
 =head2 annotate
 
-Returns a new instanced of the object with annotated data having called the API
+Returns a new instance of the object with annotated data having called the API
 
     my $annotated_transaction = $transaction->annotate(
         foo => "bar",

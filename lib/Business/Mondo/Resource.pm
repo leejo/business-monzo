@@ -18,9 +18,11 @@ use Try::Tiny;
 
 =head1 ATTRIBUTES
 
-    client
-    url
-    url_no_id
+The Resource class has the following attributes (with their type).
+
+    client (Business::Mondo::Client) - REQUIRED
+    url (Str)
+    url_no_id (Str)
 
 =cut
 
@@ -73,7 +75,7 @@ Returns a json string representation of the object.
 
 =head2 get
 
-Returns a new instanced of the object populated with the attributes having called
+Returns a new instance of the object populated with the attributes having called
 the API
 
     my $populated_object = $object->get;
