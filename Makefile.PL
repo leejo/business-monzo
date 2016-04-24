@@ -18,7 +18,7 @@ WriteMakefile(
         'MIME::Base64'         => 0, # MIME::Base64 was first released with perl v5.7.3
         'LWP::UserAgent'       => 6.00,
         'LWP::Protocol::https' => 6.00,
-        'JSON'                 => 2.90,
+        'Cpanel::JSON::XS'     => 3.0115,
         'Try::Tiny'            => 0.22,
         'Types::Standard'      => 1.000005,
         'Data::Currency'       => 0.06000,

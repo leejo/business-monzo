@@ -12,7 +12,6 @@ module.
 =cut
 
 use Moo;
-use JSON ();
 use Carp qw/ cluck /;
 
 with 'Throwable';
@@ -21,7 +20,7 @@ with 'Throwable';
 
 =head2 message (required)
 
-The error message, if JSON is passed this will be coerced to a string.
+The error message.
 
 =head2 code (optional)
 
@@ -45,23 +44,8 @@ has message => (
     required => 1,
     coerce   => sub {
         my ( $message ) = @_;
-
         cluck $message if $ENV{MONDO_DEBUG};
-
-        if ( $message =~ /^[{\[]/ ) {
-            # defensive decoding
-            eval { $message = JSON->new->decode( $message ) };
-            $@ && do { return "Failed to parse JSON response ($message): $@"; };
-
-            if ( ref( $message ) eq 'HASH' ) {
-                my $error = delete( $message->{Message} ) // "Unknown error";
-                return ref( $error ) ? join( ', ',@{ $error } ) : $error;
-            } else {
-                return join( ', ',@{ $message } );
-            }
-        } else {
-            return $message;
-        }
+        return $message;
     },
 );
 

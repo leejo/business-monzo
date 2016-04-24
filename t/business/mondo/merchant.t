@@ -81,6 +81,10 @@ is(
 isa_ok( $Merchant->address,'Business::Mondo::Address' );
 isa_ok( $Merchant->created,'DateTime' );
 
+ok( $Merchant->to_hash,'to_hash' );
+ok( $Merchant->as_json,'to_json' );
+ok( $Merchant->TO_JSON,'TO_JSON' );
+
 done_testing();
 
 # vim: ts=4:sw=4:et

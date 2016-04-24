@@ -13,7 +13,8 @@ behaviour. You shouldn't use this class directly, but extend it instead.
 
 use Moo;
 use Carp qw/ confess carp /;
-use JSON ();
+use Cpanel::JSON::XS;
+use Scalar::Util qw/ blessed /;
 use Try::Tiny;
 
 =head1 ATTRIBUTES
@@ -67,11 +68,11 @@ Returns a hash representation of the object.
 
     my %data = $transaction->to_hash;
 
-=head2 to_json
+=head2 as_json
 
 Returns a json string representation of the object.
 
-    my $json = $transaction->to_json;
+    my $json = $transaction->as_json;
 
 =head2 get
 
@@ -89,16 +90,39 @@ sub to_hash {
     my ( $self ) = @_;
 
     my %hash = %{ $self };
+
     delete( $hash{client} );
+
+    foreach my $k ( qw/ created settled / ) {
+        if ( $hash{$k} ) {
+            $hash{$k} = $hash{$k}->iso8601;
+        }
+    }
+
+    if ( blessed( $hash{currency} ) ) {
+        $hash{currency} = $hash{currency}->code;
+    }
+
+    foreach my $k ( keys %hash ) {
+        if ( my $blessed = blessed( $hash{$k} ) ) {
+            next if $blessed =~ /Boolean/;
+            $hash{$k} = $hash{$k}->to_hash;
+        }
+    }
+
     return %hash;
 }
 
-sub to_json {
+sub as_json {
     my ( $self ) = @_;
-    return JSON->new->canonical->encode( { $self->to_hash } );
+
+    return Cpanel::JSON::XS->new
+        ->convert_blessed
+        ->utf8
+        ->encode( { $self->to_hash } );
 }
 
-# for JSON encoding modules
+# for JSON encoding modules (convert_blessed)
 sub TO_JSON { shift->to_hash; }
 
 sub get {

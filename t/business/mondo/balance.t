@@ -52,6 +52,10 @@ no warnings 'redefine';
 ok( $Balance = $Balance->get,'->get' );
 isa_ok( $Balance->currency,'Data::Currency' );
 
+ok( $Balance->to_hash,'to_hash' );
+ok( $Balance->as_json,'to_json' );
+ok( $Balance->TO_JSON,'TO_JSON' );
+
 done_testing();
 
 # vim: ts=4:sw=4:et

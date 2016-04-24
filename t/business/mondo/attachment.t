@@ -103,6 +103,10 @@ isa_ok( $Attachment = $Attachment->register(
 *Business::Mondo::Client::api_post = sub { {} };
 ok( $Attachment->deregister,'->deregister' );
 
+ok( $Attachment->to_hash,'to_hash' );
+ok( $Attachment->as_json,'to_json' );
+ok( $Attachment->TO_JSON,'TO_JSON' );
+
 done_testing();
 
 # vim: ts=4:sw=4:et

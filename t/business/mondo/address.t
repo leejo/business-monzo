@@ -72,6 +72,10 @@ is(
     ' ... with expected message'
 );
 
+ok( $Address->to_hash,'to_hash' );
+ok( $Address->as_json,'to_json' );
+ok( $Address->TO_JSON,'TO_JSON' );
+
 done_testing();
 
 # vim: ts=4:sw=4:et

@@ -30,15 +30,15 @@ The Transaction class has the following attributes (with their type).
     amount (Int)
     metadata (HashRef)
     is_load (Bool)
-    settled (Bool)
     merchant (Business::Mondo::Merchant)
     currency (Data::Currency)
     created (DateTime)
+    settled (DateTime)
 
 Note that if a HashRef or Str is passed to ->merchant it will be coerced
 into a Business::Mondo::Merchant object. When a Str is passed to ->currency
 this will be coerced to a Data::Currency object, and when a Str is passed
-to ->created this will be coerced to a DateTime object.
+to ->created / ->settled this will be coerced to a DateTime object.
 
 =cut
 
@@ -57,7 +57,7 @@ has [ qw/ metadata / ] => (
     isa => HashRef,
 );
 
-has [ qw/ is_load settled / ] => (
+has [ qw/ is_load / ] => (
     is  => 'ro',
     isa => Bool,
 );
@@ -100,7 +100,7 @@ has currency => (
     },
 );
 
-has created => (
+has [ qw/ created settled / ] => (
     is      => 'ro',
     isa     => Maybe[InstanceOf['DateTime']],
     coerce  => sub {
