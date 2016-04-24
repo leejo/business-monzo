@@ -64,6 +64,31 @@ is(
     ' ... with expected message'
 );
 
+throws_ok(
+    sub { $Account->add_feed_item },
+    'Business::Mondo::Exception'
+);
+
+is(
+    $@->message,
+    'add_feed_item requires params: title, image_url',
+    ' ... with expected message'
+);
+
+no warnings 'redefine';
+*Business::Mondo::Client::api_post = sub { {} };
+
+ok( $Account->add_feed_item(
+    params => {
+        title => "My custom item",
+        image_url => "www.example.com/image.png",
+        background_color => "#FCF1EE",
+        body_color => "#FCF1EE",
+        title_color => "#333",
+        body => "Some body text to display",
+    },
+),'->add_feed_item' );
+
 done_testing();
 
 # vim: ts=4:sw=4:et

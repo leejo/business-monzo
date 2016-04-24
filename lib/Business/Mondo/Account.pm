@@ -68,6 +68,28 @@ sub get {
     });
 }
 
+sub add_feed_item {
+    my ( $self,%params ) = @_;
+
+    $params{params}{title} && $params{params}{image_url} ||
+        Business::Mondo::Exception->throw({
+            message => "add_feed_item requires params: title, image_url",
+        });
+
+    $params{account_id}  = $self->id;
+    $params{type}      //= 'basic';
+
+    # title -> params[title] (params, params, params, params, params... what a mess)
+    $params{params}      = { $self->_params_as_array_string( 'params',$params{params} ) };
+
+    my %post_params = (
+        %{ delete $params{params} },
+        %params,
+    );
+
+    return $self->client->api_post( '/feed',\%post_params );
+}
+
 =head1 SEE ALSO
 
 L<Business::Mondo>

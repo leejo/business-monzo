@@ -146,9 +146,7 @@ Returns a new instanced of the object with annotated data having called the API
 sub annotate {
     my ( $self,%annotations ) = @_;
 
-    %annotations = map {
-        +"metadata[$_]" => $annotations{$_}
-    } keys %annotations;
+    %annotations = $self->_params_as_array_string( 'metadata',\%annotations );
 
     my $data = $self->client->api_patch( $self->url,\%annotations );
     $data = $data->{transaction};

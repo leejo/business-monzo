@@ -134,8 +134,8 @@ sub _api_request {
 
     if ( $method =~ /POST|PUT|DELETE/ ) {
         if ( $params ) {
-            $req->content_type( 'application/json' );
-            $req->content( JSON->new->encode( $params ) );
+            $req->content_type( 'application/x-www-form-urlencoded; charset=utf-8' );
+            $req->content( $self->normalize_params( $params ) );
 
             carp( $req->content )
                 if $ENV{MONDO_DEBUG};

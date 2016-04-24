@@ -25,13 +25,16 @@ into the corresponding ISO8601 string
 =cut
 
 sub normalize_params {
-    my ( $self,$params ) = @_;
+    my ( $self,$params,$rfc_encode ) = @_;
 
     return '' if ( ! $params || ! keys( %{ $params } ) );
 
     return join( '&',
         map { $_->[0] . '=' . $_->[1]  }
-        map { [ _rfc5849_encode( $_ ),_rfc5849_encode( $params->{$_} ) ] }
+        map { $rfc_encode
+            ? [ _rfc5849_encode( $_ ),_rfc5849_encode( $params->{$_} ) ]
+            : [ $_,$params->{$_} ]
+        }
         sort { $a cmp $b }
         keys( %{ $params } )
     );
@@ -46,6 +49,16 @@ sub _rfc5849_encode {
 
     $str =~ s#([^-.~_a-z0-9])#sprintf('%%%02X', ord($1))#gei;
     return $str;
+}
+
+sub _params_as_array_string {
+    my ( $self,$key,$params ) = @_;
+
+    my %modded_params = map {
+        +"$key\[$_\]" => $params->{$_}
+    } keys %{ $params };
+
+    return %modded_params;
 }
 
 =head1 AUTHOR
