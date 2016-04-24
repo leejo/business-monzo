@@ -60,6 +60,10 @@ no warnings 'redefine';
 
 ok( $Webhook->delete,'->delete' );
 
+ok( $Webhook->to_hash,'to_hash' );
+ok( $Webhook->as_json,'to_json' );
+ok( $Webhook->TO_JSON,'TO_JSON' );
+
 done_testing();
 
 # vim: ts=4:sw=4:et

@@ -64,6 +64,10 @@ cmp_deeply(
     '->annotations'
 );
 
+ok( $Transaction->to_hash,'to_hash' );
+ok( $Transaction->as_json,'to_json' );
+ok( $Transaction->TO_JSON,'TO_JSON' );
+
 done_testing();
 
 sub _transaction {
@@ -104,7 +108,7 @@ sub _transaction {
             "metadata" => $metadata // {},
             "notes"    => "Salmon sandwich 🍞",
             "is_load"  => JSON::false,
-            "settled"  => JSON::true
+            "settled"  => "2015-08-22T12:20:18Z",
         }
     };
 }

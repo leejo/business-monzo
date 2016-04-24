@@ -17,10 +17,11 @@ use Moo::Role;
 =head2 normalize_params
 
 Normalizes the passed params hash into a string for use in queries to the
-Mondo API. Includes RFC5849 encoding and will convert DateTime objects
-into the corresponding ISO8601 string
+Mondo API. If a second true value is passed this will includes RFC5849
+encoding and will convert DateTime objects into the corresponding ISO8601
+string
 
-    my $query_string = $self->normalize_params( \%params );
+    my $query_string = $self->normalize_params( \%params,$rfc_encode );
 
 =cut
 

@@ -17,10 +17,11 @@ with 'Business::Mondo::Version';
 
 use Business::Mondo::Exception;
 use Business::Mondo::Transaction;
+use Business::Mondo::Account;
 
 use MIME::Base64 qw/ encode_base64 /;
 use LWP::UserAgent;
-use JSON ();
+use Cpanel::JSON::XS;
 use Carp qw/ carp /;
 
 =head1 ATTRIBUTES
@@ -32,6 +33,11 @@ Your Mondo access token, this is required
 =head2 api_url
 
 The Mondo url, which will default to https://api.getmondo.co.uk
+
+=head2 user_agent
+
+The user agent string used in requests to the mondo API, defaults to
+business-mondo/perl/v . $version_of_this_library.
 
 =cut
 
@@ -46,6 +52,14 @@ has api_url => (
     default  => sub {
         return $ENV{MONDO_URL} || $Business::Mondo::API_URL;
     },
+);
+
+has user_agent => (
+    is      => 'ro',
+    default => sub {
+        # probably want more infoin here, version of perl, platform, and such
+        return "business-mondo/perl/v" . $Business::Mondo::VERSION;
+    }
 );
 
 sub _get_transaction {
@@ -148,7 +162,7 @@ sub _api_request {
         my $data = $res->content;
 
         if ( $res->headers->header( 'content-type' ) =~ m!application/json! ) {
-            $data = JSON->new->decode( $data );
+            $data = decode_json( $data );
         }
 
         return $data;
@@ -172,12 +186,12 @@ sub _build_request {
     my $req = HTTP::Request->new(
         # passing through the absolute URL means we don't build it
         $method => $path =~ /^http/
-            ? $path : join( '/',$self->base_url . $self->api_path,$path ),
+            ? $path : join( '/',$self->api_url,$path ),
     );
 
     carp(
         $method => $path =~ /^http/
-            ? $path : join( '/',$self->base_url . $self->api_path,$path ),
+            ? $path : join( '/',$self->api_url,$path ),
     ) if $ENV{MONDO_DEBUG};
 
     $self->_set_request_headers( $req );

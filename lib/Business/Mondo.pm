@@ -126,8 +126,7 @@ has client => (
 =head1 METHODS
 
 In the following %query_params refers to the possible query params as shown in
-the Mondo API documentation. For example: limit=100. You can pass DateTime objects
-through and these will be correctly changed into strings when calling the API:
+the Mondo API documentation. For example: limit=100.
 
     # transactions in the previous month
     my @transactions = $mondo->transactions(
@@ -136,7 +135,10 @@ through and these will be correctly changed into strings when calling the API:
 
 =head2 transaction
 
-    $mondo->transaction( %query_params );
+    my $Transaction = $mondo->transaction(
+        id     => $id,
+        expand => 'merchant'
+    );
 
 Get a transaction. Will return a L<Business::Mondo::Transaction> object
 
@@ -145,11 +147,11 @@ Get a transaction. Will return a L<Business::Mondo::Transaction> object
     $mondo->transactions( %query_params );
 
 Get a list of transactions. Will return a list of L<Business::Mondo::Transaction>
-objects
+objects. Note you must supply an account_id in the params hash;
 
 =head2 accounts
 
-    $mondo->accounts( %query_params );
+    $mondo->accounts;
 
 Get a list of accounts. Will return a list of L<Business::Mondo::Account>
 objects
@@ -163,12 +165,17 @@ sub transactions {
 
 sub transaction {
     my ( $self,%params ) = @_;
+
+    if ( my $expand = delete( $params{expand} ) ) {
+        $params{'expand[]'} = $expand;
+    }
+
     return $self->client->_get_transaction( \%params );
 }
 
 sub accounts {
-    my ( $self,%params ) = @_;
-    return $self->client->_get_accounts( \%params );
+    my ( $self ) = @_;
+    return $self->client->_get_accounts;
 }
 
 =head1 EXAMPLES

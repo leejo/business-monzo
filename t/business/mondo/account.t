@@ -136,6 +136,10 @@ is( $Webhook->callback_url,'https://foo','->callback_url' );
 ok( my @webhooks = $Account->webhooks,'->webhooks' );
 is( $webhooks[1]->callback_url,'https://bar',' ... has list' );
 
+ok( $Account->to_hash,'to_hash' );
+ok( $Account->as_json,'to_json' );
+ok( $Account->TO_JSON,'TO_JSON' );
+
 done_testing();
 
 # vim: ts=4:sw=4:et
