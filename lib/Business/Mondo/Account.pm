@@ -16,6 +16,7 @@ with 'Business::Mondo::Utils';
 
 use Types::Standard qw/ :all /;
 use Business::Mondo::Address;
+use Business::Mondo::Webhook;
 use Business::Mondo::Exception;
 
 =head1 ATTRIBUTES
@@ -52,7 +53,11 @@ has created => (
 
 =head1 Operations on an account
 
-None at present
+=head2 add_feed_item
+
+=head2 register_webhook
+
+=head2 webhooks
 
 =cut
 
@@ -88,6 +93,53 @@ sub add_feed_item {
     );
 
     return $self->client->api_post( '/feed',\%post_params );
+}
+
+sub register_webhook {
+    my ( $self,%params ) = @_;
+
+    $params{callback_url} || Business::Mondo::Exception->throw({
+        message => "register_webhook requires params: callback_url",
+    });
+
+    my %post_params = (
+        url        => $params{url},
+        account_id => $self->id,
+    );
+
+    my $data = $self->client->api_post( '/feed',\%post_params );
+
+    return Business::Mondo::Webhook->new(
+        client       => $self->client,
+        id           => $data->{webhook}{id},
+        callback_url => $data->{webhook}{url},
+        account      => $self,
+    );
+}
+
+sub webhooks {
+    my ( $self ) = @_;
+
+    my $data = $self->client->api_get(
+        '/webhooks',{ account_id => $self->id }
+    );
+
+    my @webhooks;
+
+    foreach my $webhook ( @{ $data->{webhooks} // [] } ) {
+
+        push(
+            @webhooks,
+            Business::Mondo::Webhook->new(
+                client       => $self->client,
+                id           => $webhook->{id},
+                callback_url => $webhook->{url},
+                account      => $self,
+            )
+        );
+    }
+
+    return @webhooks;
 }
 
 =head1 SEE ALSO

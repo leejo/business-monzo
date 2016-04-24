@@ -89,6 +89,53 @@ ok( $Account->add_feed_item(
     },
 ),'->add_feed_item' );
 
+throws_ok(
+    sub { $Account->register_webhook },
+    'Business::Mondo::Exception'
+);
+
+is(
+    $@->message,
+    'register_webhook requires params: callback_url',
+    ' ... with expected message'
+);
+
+*Business::Mondo::Client::api_post = sub { {
+    webhook => {
+        account_id => $Account->id,
+        id         => "webhook_id",
+        url        => 'https://foo',
+    },
+} };
+
+isa_ok(
+    my $Webhook = $Account->register_webhook( callback_url => 'https://foo' ),
+    'Business::Mondo::Webhook',
+    '->register_webhook'
+);
+
+is( $Webhook->account,$Account,'->account' );
+is( $Webhook->id,'webhook_id','->id' );
+is( $Webhook->callback_url,'https://foo','->callback_url' );
+
+*Business::Mondo::Client::api_get = sub { {
+    webhooks => [
+        {
+            account_id => $Account->id,
+            id         => "webhook_id",
+            url        => 'https://foo',
+        },
+        {
+            account_id => $Account->id,
+            id         => "webhook_id",
+            url        => 'https://bar',
+        },
+    ]
+} };
+
+ok( my @webhooks = $Account->webhooks,'->webhooks' );
+is( $webhooks[1]->callback_url,'https://bar',' ... has list' );
+
 done_testing();
 
 # vim: ts=4:sw=4:et

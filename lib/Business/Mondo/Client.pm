@@ -128,11 +128,11 @@ sub _api_request {
     $ua->agent( $self->user_agent );
 
     $path = $self->_add_query_params( $path,$params )
-        if $method =~ /GET|PATCH/;
+        if $method =~ /GET/;
 
     my $req = $self->_build_request( $method,$path );
 
-    if ( $method =~ /POST|PUT|DELETE/ ) {
+    if ( $method =~ /POST|PUT|PATCH/ ) {
         if ( $params ) {
             $req->content_type( 'application/x-www-form-urlencoded; charset=utf-8' );
             $req->content( $self->normalize_params( $params ) );
