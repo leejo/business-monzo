@@ -19,7 +19,6 @@ use Business::Mondo::Exception;
 use Business::Mondo::Transaction;
 use Business::Mondo::Account;
 
-use MIME::Base64 qw/ encode_base64 /;
 use LWP::UserAgent;
 use Cpanel::JSON::XS;
 use Carp qw/ carp /;

@@ -13,7 +13,6 @@ package main;
 use Test::Most;
 use Test::Deep;
 use Test::Exception;
-use MIME::Base64 qw/ decode_base64 /;
 
 use Business::Mondo::Utils;
 

@@ -15,7 +15,6 @@ WriteMakefile(
         'Moo'                  => 1.006,
         'Carp'                 => 0, # Carp was first released with perl 5
         'Throwable'            => 0.200011,
-        'MIME::Base64'         => 0, # MIME::Base64 was first released with perl v5.7.3
         'LWP::UserAgent'       => 6.00,
         'LWP::Protocol::https' => 6.00,
         'Cpanel::JSON::XS'     => 3.0115,
@@ -29,7 +28,6 @@ WriteMakefile(
         'Test::Deep'       => 0.112,
         'Test::Exception'  => 0.32,
         'Test::MockObject' => 1.20140408,
-        'DateTime::Tiny'   => 1.04,
     },
     META_MERGE => {
         resources => {
