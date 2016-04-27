@@ -37,8 +37,14 @@ WriteMakefile(
             bugtracker => 'https://github.com/leejo/business-mondo/issues',
             repository => 'https://github.com/leejo/business-mondo'
         },
+        repository => {
+            type => 'git',
+            url  => 'https://github.com/leejo/business-mondo.git',
+            web  => 'https://github.com/leejo/business-mondo',
+        },
     },
     test => {
+        TESTS                => 't/*.t t/*/*.t t/*/*/*.t',
         RECURSIVE_TEST_FILES => 1,
     },
 );
