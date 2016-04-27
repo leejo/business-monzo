@@ -25,6 +25,8 @@ The Attachment class has the following attributes (with their type).
     id (Str)
     user_id (Str)
     external_id (Str)
+    upload_url (Str)
+    file_name (Str)
     file_url (Str)
     file_type (Str)
     created (DateTime)
@@ -34,7 +36,15 @@ to a DateTime object.
 
 =cut
 
-has [ qw/ id user_id external_id file_url file_type / ] => (
+has [ qw/
+    id
+    user_id
+    external_id
+    upload_url
+    file_name
+    file_url
+    file_type
+/ ] => (
     is  => 'ro',
     isa => Str,
 );
@@ -57,10 +67,12 @@ has created => (
 
 =head2 upload
 
-Gets the upload_url and file_url for the given file_name and file_type. Returns
-a hashref with these details. Note the required parameters:
+Gets the upload_url and file_url for the given file_name and file_type.
+Returns a new L<Business::Mondo::Attachment> object with the attributes
+file_name, file_type, file_url, and upload_url populated. Note the
+required parameters:
 
-    my $file_details = $Account->webhooks(
+    my $file_details = $Attachment->upload(
         file_name => 'foo.png',   # REQUIRED
         file_type => 'image/png', # REQUIRED
     );
@@ -78,10 +90,17 @@ sub upload {
             message => "upload requires params: file_name, file_type",
         });
 
-    return $self->client->api_post( 'attachment/upload',{
+    my $data = $self->client->api_post( 'attachment/upload',{
         file_name => $params{file_name},
         file_type => $params{file_type},
     } );
+
+    return $self->new(
+        client    => $self->client,
+        file_name => $params{file_name},
+        file_type => $params{file_type},
+        %{ $data },
+    );
 }
 
 =head2 register
@@ -89,7 +108,8 @@ sub upload {
 Registers an attachment against an entity (transaction, etc). Returns
 a new Business::Mondo::Attachment object with the details populated
 
-    my $file_details = $Account->webhooks(
+    my $file_details = $Attachment->webhooks(
+        # the following are REQUIRED if not set on $Attachment
         file_url    => 'http://www.example.com/foo.png',  # REQUIRED
         file_type   => 'image/png',                       # REQUIRED
 
@@ -107,6 +127,9 @@ sub register {
         $params{external_id} = $params{entity}->id;
     }
 
+    $params{file_url}  //= $self->file_url;
+    $params{file_type} //= $self->file_type;
+
     $params{external_id} && $params{file_url} && $params{file_type} ||
         Business::Mondo::Exception->throw({
             message => "register requires params: external_id, file_name, file_type",
@@ -119,7 +142,9 @@ sub register {
     } );
 
     return $self->new(
-        client => $self->client,
+        client     => $self->client,
+        file_name  => $self->file_name,
+        upload_url => $self->upload_url,
         %{ $data->{attachment} },
     );
 }
@@ -144,7 +169,7 @@ sub deregister {
 
 L<Business::Mondo>
 
-L<Business::Mondo::Client>
+L<Business::Mondo::Resource>
 
 =head1 AUTHOR
 

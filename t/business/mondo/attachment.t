@@ -65,11 +65,17 @@ no warnings 'redefine';
     upload_url => 'http://boz',
 } };
 
-cmp_deeply(
-    $Attachment->upload( file_name => 'foo',file_type => 'bar' ),
-    { file_url => 'http://baz','upload_url' => 'http://boz' },
-    '->upload'
+isa_ok(
+    $Attachment = $Attachment->upload(
+        file_name => 'foo',file_type => 'bar'
+    ),
+    'Business::Mondo::Attachment'
 );
+
+is( $Attachment->file_name,'foo','->file_name' );
+is( $Attachment->file_type,'bar','->file_type' );
+is( $Attachment->upload_url,'http://boz','->upload_url' );
+is( $Attachment->file_url,'http://baz','->file_url' );
 
 throws_ok(
     sub { $Attachment->register },

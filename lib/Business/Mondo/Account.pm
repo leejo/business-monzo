@@ -16,6 +16,7 @@ with 'Business::Mondo::Utils';
 
 use Types::Standard qw/ :all /;
 use Business::Mondo::Address;
+use Business::Mondo::Balance;
 use Business::Mondo::Webhook;
 use Business::Mondo::Exception;
 
@@ -32,7 +33,13 @@ to a DateTime object.
 
 =cut
 
-has [ qw/ id description / ] => (
+has [ qw/ id / ] => (
+    is       => 'ro',
+    isa      => Str,
+    required => 1,
+);
+
+has [ qw/ description / ] => (
     is  => 'ro',
     isa => Str,
 );
@@ -176,11 +183,51 @@ sub webhooks {
     return @webhooks;
 }
 
+=head2 transactions
+
+Returns a list of L<Business::Mondo::Transaction> objects for the
+account
+
+    my @transactions = $Account->transactions( %query_params );
+
+=cut
+
+sub transactions {
+    my ( $self,%params ) = @_;
+
+    return $self->client->_get_transactions({
+        %params,
+        account_id => $self->id,
+    });
+}
+
+=head2 balance
+
+Returns a L<Business::Mondo::Balance> object for the account with the
+attributes populated having called the Mondo API
+
+    $Balance = $Account->balance;
+
+=cut
+
+sub balance {
+    my ( $self ) = @_;
+
+    return Business::Mondo::Balance->new(
+        client     => $self->client,
+        account_id => $self->id,
+    )->get;
+}
+
 =head1 SEE ALSO
 
 L<Business::Mondo>
 
-L<Business::Mondo::Client>
+L<Business::Mondo::Resource>
+
+L<Business::Mondo::Balance>
+
+L<Business::Mondo::Transaction>
 
 =head1 AUTHOR
 

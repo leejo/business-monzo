@@ -21,6 +21,7 @@ WriteMakefile(
         'Try::Tiny'            => 0.22,
         'Types::Standard'      => 1.000005,
         'Data::Currency'       => 0.06000,
+        'DateTime'             => 1.26,
         'DateTime::Format::DateParse' => 0.05,
     },
     TEST_REQUIRES => {

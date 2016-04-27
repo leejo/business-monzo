@@ -103,12 +103,14 @@ sub _get_entities {
     api_get
     api_post
     api_delete
+    api_patch
 
 Make a request to the Mondo API:
 
-    my $data = $Client->api_get( 'foo',\%params );
+    my $data = $Client->api_get( 'location',\%params );
 
-May return a list of L<Business::Mondo::foo> objects
+May return a the decoded response data as a hash/array/string depending
+on the reposonse type
 
 =cut
 

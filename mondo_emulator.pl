@@ -160,7 +160,7 @@ group {
         shift->render( json => {} );
     };
 
-    post '/attachement/upload' => sub {
+    post '/attachment/upload' => sub {
         my ( $c ) = @_;
 
         my $file_name = $c->param( 'file_name' )
@@ -178,7 +178,7 @@ group {
         } );
     };
 
-    post '/attachement/register' => sub {
+    post '/attachment/register' => sub {
         my ( $c ) = @_;
 
         my $external_id = $c->param( 'external_id' )
@@ -194,7 +194,7 @@ group {
             "attachment" => {
                 "id" => "attach_00009238aOAIvVqfb9LrZh",
                 "user_id" => "user_00009238aMBIIrS5Rdncq9",
-                "external_id" => "tx_00008zIcpb1TB4yeIFXMzx",
+                "external_id" => $external_id,
                 "file_url" => $file_url,
                 "file_type" => "image/png",
                 "created" => "2015-11-12T18:37:02Z"
@@ -202,7 +202,7 @@ group {
         } );
     };
 
-    post '/attachement/deregister' => sub {
+    post '/attachment/deregister' => sub {
         my ( $c ) = @_;
 
         my $id = $c->param( 'id' )

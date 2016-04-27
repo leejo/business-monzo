@@ -68,22 +68,6 @@ Returns a hash representation of the object.
 
     my %data = $transaction->to_hash;
 
-=head2 as_json
-
-Returns a json string representation of the object.
-
-    my $json = $transaction->as_json;
-
-=head2 get
-
-Returns a new instance of the object populated with the attributes having called
-the API
-
-    my $populated_object = $object->get;
-
-This is for when you have instantiated an object with the id, so calling the API
-will retrieve the full details for the entity.
-
 =cut
 
 sub to_hash {
@@ -113,6 +97,14 @@ sub to_hash {
     return %hash;
 }
 
+=head2 as_json
+
+Returns a json string representation of the object.
+
+    my $json = $transaction->as_json;
+
+=cut
+
 sub as_json {
     my ( $self ) = @_;
 
@@ -124,6 +116,18 @@ sub as_json {
 
 # for JSON encoding modules (convert_blessed)
 sub TO_JSON { shift->to_hash; }
+
+=head2 get
+
+Returns a new instance of the object populated with the attributes having called
+the API
+
+    my $populated_object = $object->get;
+
+This is for when you have instantiated an object with the id, so calling the API
+will retrieve the full details for the entity.
+
+=cut
 
 sub get {
     my ( $self,$sub_key ) = @_;

@@ -64,7 +64,7 @@ sub get {
 
 L<Business::Mondo>
 
-L<Business::Mondo::Client>
+L<Business::Mondo::Resource>
 
 =head1 AUTHOR
 

@@ -56,7 +56,8 @@ sub _params_as_array_string {
     my ( $self,$key,$params ) = @_;
 
     my %modded_params = map {
-        +"$key\[$_\]" => $params->{$_}
+        +"$key\[$_\]" => ref( $params->{$_} ) eq 'DateTime'
+            ? $params->{$_}->iso8601 : $params->{$_}
     } keys %{ $params };
 
     return %modded_params;

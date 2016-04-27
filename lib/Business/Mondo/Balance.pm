@@ -73,12 +73,19 @@ has [ qw/ url / ] => (
 
 =head2 get
 
+Returns a new instance of the object with the attributes populated
+having called the Mondo API
+
+    $Balance = $Balance->get;
+
 =cut
 
 sub get {
     my ( $self ) = @_;
 
-    my $data = $self->client->api_get;
+    my $data = $self->client->api_get(
+        'balance?account_id=' . $self->account_id
+    );
 
     return $self->new(
         account_id => $self->account_id,
@@ -91,7 +98,7 @@ sub get {
 
 L<Business::Mondo>
 
-L<Business::Mondo::Client>
+L<Business::Mondo::Resource>
 
 =head1 AUTHOR
 

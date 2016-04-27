@@ -139,6 +139,16 @@ ok( $Account->to_hash,'to_hash' );
 ok( $Account->as_json,'to_json' );
 ok( $Account->TO_JSON,'TO_JSON' );
 
+*Business::Mondo::Client::api_get = sub {
+    {
+        "balance"     => 5000,
+        "currency"    => 'GBP',
+        "soend_today" => 0,
+    };
+};
+
+isa_ok( $Account->balance,'Business::Mondo::Balance' );
+
 done_testing();
 
 # vim: ts=4:sw=4:et

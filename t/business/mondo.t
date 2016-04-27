@@ -47,6 +47,8 @@ $mock->mock( 'header',sub { 'application/json' } );
 
 test_transaction( $Mondo,$mock );
 test_account( $Mondo,$mock );
+test_balance( $Mondo,$mock );
+test_attachment( $Mondo,$mock );
 
 *Business::Mondo::Client::_api_request = sub { shift; return shift };
 
@@ -89,6 +91,33 @@ sub test_account {
     isa_ok(
         my $Account = ( $Mondo->accounts )[1],
         'Business::Mondo::Account'
+    );
+}
+
+sub test_balance {
+
+    my ( $Mondo,$mock ) = @_;
+
+    $mock->mock( 'content',sub { _balance_json() } );
+
+    isa_ok(
+        $Mondo->balance( account_id => 1 ),
+        'Business::Mondo::Balance'
+    );
+}
+
+sub test_attachment {
+
+    my ( $Mondo,$mock ) = @_;
+
+#    $mock->mock( 'content',sub { _balance_json() } );
+
+    isa_ok(
+        $Mondo->upload_attachment(
+            file_name => 'foo.png',
+            file_type => 'image/png',
+        ),
+        'Business::Mondo::Attachment'
     );
 }
 
@@ -181,6 +210,15 @@ sub _accounts_json {
     ]
 }};
 
+}
+
+sub _balance_json {
+
+    return qq{{
+        "balance" : 5000,
+        "currency" : "GBP",
+        "soend_today" : 0
+    }};
 }
 
 # vim: ts=4:sw=4:et

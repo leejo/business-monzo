@@ -6,8 +6,8 @@ Business::Mondo - Perl library for interacting with the Mondo API
 (https://api.getmondo.co.uk)
 
 =for html
-<a href='https://travis-ci.org/G3S/business-mondo?branch=master'><img src='https://travis-ci.org/G3S/business-mondo.svg?branch=master' alt='Build Status' /></a>
-<a href='https://coveralls.io/r/G3S/business-mondo?branch=master'><img src='https://coveralls.io/repos/G3S/business-mondo/badge.png?branch=master' alt='Coverage Status' /></a>
+<a href='https://travis-ci.org/leejo/business-mondo?branch=master'><img src='https://travis-ci.org/leejo/business-mondo.svg?branch=master' alt='Build Status' /></a>
+<a href='https://coveralls.io/r/leejo/business-mondo?branch=master'><img src='https://coveralls.io/repos/leejo/business-mondo/badge.png?branch=master' alt='Coverage Status' /></a>
 
 =head1 VERSION
 
@@ -19,19 +19,68 @@ Business::Mondo is a library for easy interface to the Mondo banking API,
 it implements all of the functionality currently found in the service's API
 documentation: https://getmondo.co.uk/doc
 
-B<You should refer to the official Mondon API documentation in conjunction>
+B<You should refer to the official Mondo API documentation in conjunction>
 B<with this perldoc>, as the official API documentation explains in more depth
 some of the functionality including required / optional parameters for certain
 methods.
 
 Please note this library is very much a work in progress, as is the Mondo API.
 
+All objects within the Business::Mondo namespace are immutable. Calls to methods
+will, for the most part, return new instances of objects.
+
 =head1 SYNOPSIS
 
-    # agency API:
     my $mondo = Business::Mondo->new(
-        token => $token,
+        token   => $token, # REQUIRED
+        api_url => $url,   # optional
     );
+
+    # transaction related information
+    my @transactions = $mondo->transactions( account_id => $account_id );
+
+    my $Transaction  = $mondo->transaction( id => 1 );
+
+    $Transaction->annotate(
+        foo => 'bar',
+        baz => 'boz,
+    );
+
+    my $annotations = $Transaction->annotations;
+
+    # account related information
+    my ( $Account ) = $mondo->accounts;
+
+    $Account->add_feed_item(
+        params => {
+            title     => 'My Feed Item',
+            image_url => 'http://...',
+        }
+    );
+
+    # balance information
+    my $Balance = $mondo->balance( account_id => $account_id );
+
+    # webhooks
+    my @webhooks = $Account->webhooks;
+
+    my $Webhook = $Account->register_webhook(
+        callback_url => 'http://www.foo.com',
+    );
+
+    $Webhook->delete
+
+    # attachements
+    my $Attachment = $mondo->upload_attachment(
+        file_name => 'foo.png',
+        file_type => 'image/png',
+    );
+
+    $Attachment->register(
+        external_id => 'my_id'
+    );
+
+    $Attachment->deregister;
 
 =head1 ERROR HANDLING
 
@@ -76,6 +125,8 @@ with 'Business::Mondo::Version';
 use Carp qw/ confess /;
 
 use Business::Mondo::Client;
+use Business::Mondo::Account;
+use Business::Mondo::Attachment;
 
 =head1 ATTRIBUTES
 
@@ -133,14 +184,7 @@ the Mondo API documentation. For example: limit=100.
         since => DateTime->now->subtract( months => 1 ),
     );
 
-=head2 transaction
-
-    my $Transaction = $mondo->transaction(
-        id     => $id,
-        expand => 'merchant'
-    );
-
-Get a transaction. Will return a L<Business::Mondo::Transaction> object
+=cut
 
 =head2 transactions
 
@@ -148,13 +192,6 @@ Get a transaction. Will return a L<Business::Mondo::Transaction> object
 
 Get a list of transactions. Will return a list of L<Business::Mondo::Transaction>
 objects. Note you must supply an account_id in the params hash;
-
-=head2 accounts
-
-    $mondo->accounts;
-
-Get a list of accounts. Will return a list of L<Business::Mondo::Account>
-objects
 
 =cut
 
@@ -167,8 +204,45 @@ sub transactions {
         message => "transactions requires params: account_id",
     });
 
-    return $self->client->_get_transactions( \%params );
+    return Business::Mondo::Account->new(
+        client => $self->client,
+        id     => $params{account_id},
+    )->transactions;
 }
+
+=head2 balance
+
+    my $Balance = $mondo->balance( account_id => $account_id );
+
+Get an account balance Returns a L<Business::Mondo::Balance> object.
+
+=cut
+
+sub balance {
+    my ( $self,%params ) = @_;
+
+    # transactions requires account_id, whereas transaction doesn't
+    # the Mondo API is a little inconsistent at this point...
+    $params{account_id} || Business::Mondo::Exception->throw({
+        message => "balance requires params: account_id",
+    });
+
+    return Business::Mondo::Account->new(
+        client => $self->client,
+        id     => $params{account_id},
+    )->balance( %params );
+}
+
+=head2 transaction
+
+    my $Transaction = $mondo->transaction(
+        id     => $id,
+        expand => 'merchant'
+    );
+
+Get a transaction. Will return a L<Business::Mondo::Transaction> object
+
+=cut
 
 sub transaction {
     my ( $self,%params ) = @_;
@@ -180,28 +254,45 @@ sub transaction {
     return $self->client->_get_transaction( \%params );
 }
 
+=head2 accounts
+
+    $mondo->accounts;
+
+Get a list of accounts. Will return a list of L<Business::Mondo::Account>
+objects
+
+=cut
+
 sub accounts {
     my ( $self ) = @_;
     return $self->client->_get_accounts;
 }
 
+sub upload_attachment {
+    my ( $self,%params ) = @_;
+
+    return Business::Mondo::Attachment->new(
+        client => $self->client,
+    )->upload( %params );
+}
+
 =head1 EXAMPLES
 
 See the t/002_end_to_end.t test included with this distribution. you can run
-this test against the Mondo emulator (this is advised, don't run it against a
-live endpoint).
+this test against the Mondo emulator by running end_to_end_emulated.sh (this
+is advised, don't run it against a live endpoint).
 
 =head1 SEE ALSO
 
-L<Business::Mondo::Client>
+L<Business::Mondo::Account>
+
+L<Business::Mondo::Attachment>
+
+L<Business::Mondo::Balance>
 
 L<Business::Mondo::Transaction>
 
-L<Business::Mondo::Account>
-
-L<Business::Mondo::Merchant>
-
-L<Business::Mondo::Address>
+L<Business::Mondo::Webhook>
 
 =head1 AUTHOR
 
