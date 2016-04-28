@@ -75,8 +75,7 @@ sub _get_transaction {
 }
 
 sub _get_transactions {
-    my ( $self,$params ) = @_;
-    return $self->_get_entities( $params,'transaction' );
+    return shift->_get_entities( shift,'transaction' );
 }
 
 sub _get_accounts {

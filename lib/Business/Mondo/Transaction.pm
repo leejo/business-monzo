@@ -13,10 +13,10 @@ A class for a Mondo transaction, extends L<Business::Mondo::Resource>
 use Moo;
 extends 'Business::Mondo::Resource';
 with 'Business::Mondo::Utils';
+with 'Business::Mondo::Currency';
 
 use Types::Standard qw/ :all /;
 use Business::Mondo::Merchant;
-use Data::Currency;
 use DateTime::Format::DateParse;
 
 =head1 ATTRIBUTES
@@ -68,7 +68,10 @@ has merchant => (
     coerce  => sub {
         my ( $args ) = @_;
 
+        return undef if ! defined $args;
+
         if ( ref( $args ) eq 'HASH' ) {
+            return undef if ! keys %{ $args };
             $args = Business::Mondo::Merchant->new(
                 client => $Business::Mondo::Resource::client,
                 %{ $args },
@@ -78,22 +81,6 @@ has merchant => (
                 client => $Business::Mondo::Resource::client,
                 id     => $args,
             );
-        }
-
-        return $args;
-    },
-);
-
-has currency => (
-    is      => 'ro',
-    isa     => Maybe[InstanceOf['Data::Currency']],
-    coerce  => sub {
-        my ( $args ) = @_;
-
-        if ( ! ref( $args ) ) {
-            $args = Data::Currency->new({
-                code => $args,
-            });
         }
 
         return $args;

@@ -17,7 +17,7 @@ Business::Mondo - Perl library for interacting with the Mondo API
 
 Business::Mondo is a library for easy interface to the Mondo banking API,
 it implements all of the functionality currently found in the service's API
-documentation: https://getmondo.co.uk/doc
+documentation: [https://getmondo.co.uk/docs](https://getmondo.co.uk/docs)
 
 **You should refer to the official Mondo API documentation in conjunction**
 **with this perldoc**, as the official API documentation explains in more depth

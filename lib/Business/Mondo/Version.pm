@@ -12,7 +12,7 @@ A role for a Mondo version information.
 
 use Moo::Role;
 
-$Business::Mondo::VERSION     = '0.01';
+$Business::Mondo::VERSION     = '0.02';
 $Business::Mondo::API_VERSION = 'v1';
 $Business::Mondo::API_URL     = 'https://api.getmondo.co.uk';
 

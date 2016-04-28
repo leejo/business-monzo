@@ -1,4 +1,7 @@
 Revision history for Business-Mondo
 
+0.02     2015-04-28
+        - Tweak merchant coercion to handle null values
+
 0.01     2015-04-27
         - First release

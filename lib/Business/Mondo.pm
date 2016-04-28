@@ -11,13 +11,13 @@ Business::Mondo - Perl library for interacting with the Mondo API
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 DESCRIPTION
 
 Business::Mondo is a library for easy interface to the Mondo banking API,
 it implements all of the functionality currently found in the service's API
-documentation: https://getmondo.co.uk/doc
+documentation: L<https://getmondo.co.uk/docs>
 
 B<You should refer to the official Mondo API documentation in conjunction>
 B<with this perldoc>, as the official API documentation explains in more depth
@@ -49,26 +49,29 @@ will, for the most part, return new instances of objects.
     my $annotations = $Transaction->annotations;
 
     # account related information
-    my ( $Account ) = $mondo->accounts;
+    my @accounts = $mondo->accounts;
 
-    $Account->add_feed_item(
-        params => {
-            title     => 'My Feed Item',
-            image_url => 'http://...',
-        }
-    );
+    foreach my $Account ( @accounts ) {
 
-    # balance information
-    my $Balance = $mondo->balance( account_id => $account_id );
+        $Account->add_feed_item(
+            params => {
+                title     => 'My Feed Item',
+                image_url => 'http://...',
+            }
+        );
 
-    # webhooks
-    my @webhooks = $Account->webhooks;
+        # balance information
+        my $Balance = $mondo->balance( account_id => $account_id );
 
-    my $Webhook = $Account->register_webhook(
-        callback_url => 'http://www.foo.com',
-    );
+        # webhooks
+        my @webhooks = $Account->webhooks;
 
-    $Webhook->delete
+        my $Webhook = $Account->register_webhook(
+            callback_url => 'http://www.foo.com',
+        );
+
+        $Webhook->delete
+    }
 
     # attachements
     my $Attachment = $mondo->upload_attachment(

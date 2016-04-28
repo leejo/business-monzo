@@ -13,10 +13,10 @@ A class for a Mondo balance, extends L<Business::Mondo::Resource>
 use Moo;
 extends 'Business::Mondo::Resource';
 with 'Business::Mondo::Utils';
+with 'Business::Mondo::Currency';
 
 use Types::Standard qw/ :all /;
 use Business::Mondo::Merchant;
-use Data::Currency;
 use DateTime::Format::DateParse;
 
 =head1 ATTRIBUTES
@@ -42,22 +42,6 @@ has [ qw/ account_id / ] => (
 has [ qw/ balance spend_today / ] => (
     is  => 'ro',
     isa => Int,
-);
-
-has currency => (
-    is      => 'ro',
-    isa     => Maybe[InstanceOf['Data::Currency']],
-    coerce  => sub {
-        my ( $args ) = @_;
-
-        if ( ! ref( $args ) ) {
-            $args = Data::Currency->new({
-                code => $args,
-            });
-        }
-
-        return $args;
-    },
 );
 
 has [ qw/ url / ] => (
