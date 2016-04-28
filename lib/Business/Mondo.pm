@@ -53,6 +53,8 @@ will, for the most part, return new instances of objects.
 
     foreach my $Account ( @accounts ) {
 
+        my @transactions = $Account->transactions;
+
         $Account->add_feed_item(
             params => {
                 title     => 'My Feed Item',
@@ -61,7 +63,7 @@ will, for the most part, return new instances of objects.
         );
 
         # balance information
-        my $Balance = $mondo->balance( account_id => $account_id );
+        my $Balance = $Account->balance;
 
         # webhooks
         my @webhooks = $Account->webhooks;
