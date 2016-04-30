@@ -48,6 +48,11 @@ isa_ok(
 );
 
 isa_ok(
+	$Transaction->attachments->[1],
+	'Business::Mondo::Attachment',
+);
+
+isa_ok(
     $Transaction->annotate( foo => 'bar' ),
     'Business::Mondo::Transaction',
 );
@@ -98,7 +103,7 @@ is( $Balance->balance,5000,'->balance' );
 isa_ok( $Balance->currency,'Data::Currency','->currency' );
 is( $Balance->spend_today,0,'->spend_today' );
 
-note( "Attachement" );
+note( "Attachment" );
 isa_ok( my $Attachment = $Mondo->upload_attachment(
 	file_name => 'foo.png',
 	file_type => 'image/png',

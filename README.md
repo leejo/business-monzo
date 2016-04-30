@@ -75,7 +75,7 @@ will, for the most part, return new instances of objects.
         $Webhook->delete
     }
 
-    # attachements
+    # attachments
     my $Attachment = $mondo->upload_attachment(
         file_name => 'foo.png',
         file_type => 'image/png',

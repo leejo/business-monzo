@@ -75,7 +75,7 @@ will, for the most part, return new instances of objects.
         $Webhook->delete
     }
 
-    # attachements
+    # attachments
     my $Attachment = $mondo->upload_attachment(
         file_name => 'foo.png',
         file_type => 'image/png',
@@ -172,7 +172,8 @@ has client => (
     default  => sub {
         my ( $self ) = @_;
 
-        return Business::Mondo::Client->new(
+        # fix any load order issues with Resources requiring a Client
+        $Business::Mondo::Resource::client = Business::Mondo::Client->new(
             token   => $self->token,
             api_url => $self->api_url,
         );

@@ -250,6 +250,17 @@ sub _transactions {
         more_stuff => 'yep',
     };
 
+    my $attachment = {
+        "created" => "2016-04-23T12:46:41Z",
+        "external_id" => "tx_0000...",
+        "file_type" => "image/jpeg",
+        "file_url" => "https://...",
+        "id" => "attach_0000...",
+        "type" => "image/jpeg",
+        "url" => "https://...",
+        "user_id" => "user_0000..."
+    };
+
     return [
         {
             "account_balance" => 13013,
@@ -265,6 +276,7 @@ sub _transactions {
             "notes" => "Salmon sandwich 🍞",
             "is_load" => Mojo::JSON::false,
             "settled" => '2015-08-23T12:20:18Z',
+            "attachments" => [ $attachment,$attachment ],
         },
         {
             "account_balance" => 12334,
@@ -280,7 +292,8 @@ sub _transactions {
             "notes" => "",
             "is_load" => Mojo::JSON::false,
             "settled" => '2015-08-23T12:20:18Z',
-            "category" => "eating_out"
+            "category" => "eating_out",
+            "attachments" => [ $attachment,$attachment ],
         },
     ];
 }

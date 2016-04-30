@@ -40,6 +40,7 @@ can_ok(
         merchant
         currency
         created
+        attachments
     /,
 );
 
@@ -61,6 +62,11 @@ cmp_deeply(
     $Transaction->annotations,
     { foo => 1, bar => 2 },
     '->annotations'
+);
+
+isa_ok(
+    $Transaction->attachments->[1],
+    'Business::Mondo::Attachment',
 );
 
 ok( $Transaction->to_hash,'to_hash' );
@@ -104,6 +110,28 @@ sub _transaction {
                 "name"  => "The De Beauvoir Deli Co.",
                 "category" => "eating_out"
             },
+            "attachments" => [
+                {
+                    "created" => "2016-04-23T12:46:41Z",
+                    "external_id" => "tx_0000...",
+                    "file_type" => "image/jpeg",
+                    "file_url" => "https://...",
+                    "id" => "attach_0000...",
+                    "type" => "image/jpeg",
+                    "url" => "https://...",
+                    "user_id" => "user_0000..."
+                },
+                {
+                    "created" => "2016-04-23T12:46:41Z",
+                    "external_id" => "tx_0000...",
+                    "file_type" => "image/jpeg",
+                    "file_url" => "https://...",
+                    "id" => "attach_0000...",
+                    "type" => "image/jpeg",
+                    "url" => "https://...",
+                    "user_id" => "user_0000..."
+                },
+            ],
             "metadata" => $metadata // {},
             "notes"    => "Salmon sandwich 🍞",
             "is_load"  => Cpanel::JSON::XS::false,

@@ -17,6 +17,7 @@ with 'Business::Mondo::Currency';
 
 use Types::Standard qw/ :all /;
 use Business::Mondo::Merchant;
+use Business::Mondo::Attachment;
 use DateTime::Format::DateParse;
 
 =head1 ATTRIBUTES
@@ -34,6 +35,7 @@ The Transaction class has the following attributes (with their type).
     currency (Data::Currency)
     created (DateTime)
     settled (DateTime)
+    attachments (ArrayRef[Business::Mondo::Attachment])
 
 Note that if a HashRef or Str is passed to ->merchant it will be coerced
 into a Business::Mondo::Merchant object. When a Str is passed to ->currency
@@ -84,6 +86,27 @@ has merchant => (
         }
 
         return $args;
+    },
+);
+
+has attachments => (
+    is      => 'ro',
+    isa     => Maybe[ArrayRef[InstanceOf['Business::Mondo::Attachment']]],
+    coerce  => sub {
+        my ( $args ) = @_;
+
+        return undef if ! defined $args;
+
+        my @attachments;
+
+        foreach my $attachment ( @{ $args } ) {
+            push( @attachments,Business::Mondo::Attachment->new(
+                client => $Business::Mondo::Resource::client,
+                %{ $attachment },
+            ) );
+        }
+
+        return [ @attachments ];
     },
 );
 

@@ -110,7 +110,7 @@ ok( $Balance->balance,'->balance' );
 isa_ok( $Balance->currency,'Data::Currency','->currency' );
 is( $Balance->spend_today,0,'->spend_today' );
 
-note( "Attachement" );
+note( "Attachment" );
 isa_ok( my $Attachment = $Mondo->upload_attachment(
 	file_name => 'foo.png',
 	file_type => 'image/png',
