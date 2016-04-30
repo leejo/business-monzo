@@ -227,8 +227,6 @@ Get an account balance Returns a L<Business::Mondo::Balance> object.
 sub balance {
     my ( $self,%params ) = @_;
 
-    # transactions requires account_id, whereas transaction doesn't
-    # the Mondo API is a little inconsistent at this point...
     $params{account_id} || Business::Mondo::Exception->throw({
         message => "balance requires params: account_id",
     });
