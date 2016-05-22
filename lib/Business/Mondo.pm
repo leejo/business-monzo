@@ -11,7 +11,7 @@ Business::Mondo - Perl library for interacting with the Mondo API
 
 =head1 VERSION
 
-0.02
+0.03
 
 =head1 DESCRIPTION
 
@@ -91,9 +91,7 @@ will, for the most part, return new instances of objects.
 
 Any problems or errors will result in a Business::Mondo::Exception
 object being thrown, so you should wrap any calls to the library in the
-appropriate error catching code (TryCatch in the below example):
-
-    use TryCatch;
+appropriate error catching code (ideally a module from CPAN):
 
     try {
         ...
@@ -123,6 +121,9 @@ stack trace in the event of exceptions:
     $ENV{MONDO_DEBUG} = 1;
 
 =cut
+
+use strict;
+use warnings;
 
 use Moo;
 with 'Business::Mondo::Version';

@@ -1,5 +1,6 @@
 Changes
 Makefile.PL
+MANIFEST
 README.md
 end_to_end_emulated.sh
 lib/Business/Mondo.pm

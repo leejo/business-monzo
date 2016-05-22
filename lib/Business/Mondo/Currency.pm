@@ -10,6 +10,9 @@ A role containing currency attributes / methods
 
 =cut
 
+use strict;
+use warnings;
+
 use Moo::Role;
 use Types::Standard qw/ :all /;
 use Data::Currency;

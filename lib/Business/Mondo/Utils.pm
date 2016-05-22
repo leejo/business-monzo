@@ -10,6 +10,9 @@ A role containing Mondo utilities.
 
 =cut
 
+use strict;
+use warnings;
+
 use Moo::Role;
 
 =head1 METHODS

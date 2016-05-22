@@ -11,6 +11,9 @@ module.
 
 =cut
 
+use strict;
+use warnings;
+
 use Moo;
 use Carp qw/ cluck /;
 

@@ -10,6 +10,9 @@ A class for a Mondo transaction, extends L<Business::Mondo::Resource>
 
 =cut
 
+use strict;
+use warnings;
+
 use Moo;
 extends 'Business::Mondo::Resource';
 with 'Business::Mondo::Utils';
