@@ -28,41 +28,53 @@ use DateTime::Format::DateParse;
 The Transaction class has the following attributes (with their type).
 
     id (Str)
+    account_id (Str)
+    category (Str)
+    dedupe_id (Str)
     description (Str)
     notes (Str)
+    scheme (Str)
     account_balance (Int)
     amount (Int)
+    local_amount (Int)
+    counterparty (HashRef)
     metadata (HashRef)
     is_load (Bool)
+    originator (Bool)
     merchant (Business::Mondo::Merchant)
     currency (Data::Currency)
+    local_currency (Data::Currency)
     created (DateTime)
+    updated (DateTime)
     settled (DateTime)
     attachments (ArrayRef[Business::Mondo::Attachment])
 
 Note that if a HashRef or Str is passed to ->merchant it will be coerced
 into a Business::Mondo::Merchant object. When a Str is passed to ->currency
-this will be coerced to a Data::Currency object, and when a Str is passed
-to ->created / ->settled this will be coerced to a DateTime object.
+/ ->local_currency this will be coerced to a Data::Currency object, and
+when a Str is passed to ->created / ->updated / ->settled this will be
+coerced to a DateTime object.
 
 =cut
 
-has [ qw/ id description notes / ] => (
+has [ qw/
+    id account_id category dedupe_id description notes scheme
+/ ] => (
     is  => 'ro',
     isa => Str,
 );
 
-has [ qw/ account_balance amount / ] => (
+has [ qw/ account_balance amount local_amount / ] => (
     is  => 'ro',
     isa => Int,
 );
 
-has [ qw/ metadata / ] => (
+has [ qw/ counterparty metadata / ] => (
     is  => 'ro',
     isa => HashRef,
 );
 
-has [ qw/ is_load / ] => (
+has [ qw/ is_load originator / ] => (
     is  => 'ro',
     isa => Bool,
 );
@@ -113,7 +125,7 @@ has attachments => (
     },
 );
 
-has [ qw/ created settled / ] => (
+has [ qw/ created updated settled / ] => (
     is      => 'ro',
     isa     => Maybe[InstanceOf['DateTime']],
     coerce  => sub {

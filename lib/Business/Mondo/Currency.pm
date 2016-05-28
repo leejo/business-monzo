@@ -17,7 +17,7 @@ use Moo::Role;
 use Types::Standard qw/ :all /;
 use Data::Currency;
 
-has currency => (
+has [ qw/ currency local_currency / ] => (
     is      => 'ro',
     isa     => Maybe[InstanceOf['Data::Currency']],
     coerce  => sub {

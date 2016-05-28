@@ -15,7 +15,7 @@ plan skip_all => "MONDO_ENDTOEND_LIVE required"
 
 # this is an "end to end" test - it will call the Mondo API
 # using the details defined in the ENV variables below.
-my ( $token,$url,$skip_cert ) = @ENV{qw/
+my ( $token,$url ) = @ENV{qw/
     MONDO_TOKEN
     MONDO_URL
 /};

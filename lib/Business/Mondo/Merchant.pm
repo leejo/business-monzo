@@ -31,18 +31,33 @@ The Merchant class has the following attributes (with their type).
     emoji (Str)
     name (Str)
     category (Str)
+    online (Bool)
+    atm (Bool)
+    disable_feedback (Bool)
     address (Business::Mondo::Address)
     created (DateTime)
+    updated (DateTime)
+    metadata (HashRef)
 
 Note that if a HashRef or Str is passed to ->address it will be coerced
 into a Business::Mondo::Address object. When a Str is passed to ->created
-this will be coerced to a DateTime object.
+or ->updated these will be coerced to a DateTime object.
 
 =cut
 
 has [ qw/ id group_id logo emoji name category / ] => (
     is  => 'ro',
     isa => Str,
+);
+
+has [ qw/ metadata / ] => (
+    is  => 'ro',
+    isa => HashRef,
+);
+
+has [ qw/ online atm disable_feedback / ] => (
+    is  => 'ro',
+    isa => Bool,
 );
 
 has address => (
@@ -63,7 +78,7 @@ has address => (
     },
 );
 
-has created => (
+has [ qw/ created updated / ] => (
     is      => 'ro',
     isa     => Maybe[InstanceOf['DateTime']],
     coerce  => sub {

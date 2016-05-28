@@ -80,18 +80,14 @@ sub to_hash {
 
     delete( $hash{client} );
 
-    foreach my $k ( qw/ created settled / ) {
-        if ( $hash{$k} ) {
-            $hash{$k} = $hash{$k}->iso8601;
-        }
-    }
-
     if ( blessed( $hash{currency} ) ) {
         $hash{currency} = $hash{currency}->code;
     }
 
     foreach my $k ( keys %hash ) {
-        if ( my $blessed = blessed( $hash{$k} ) ) {
+        if ( ref( $hash{$k} ) eq 'DateTime' ) {
+            $hash{$k} = $hash{$k}->iso8601;
+        } elsif ( my $blessed = blessed( $hash{$k} ) ) {
             next if $blessed =~ /Boolean/;
             $hash{$k} = $hash{$k}->to_hash;
         }

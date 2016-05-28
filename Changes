@@ -1,5 +1,8 @@
 Revision history for Business-Mondo
 
+0.04     2015-05-28
+        - Add missing attributes to Transaction and Merchant objects (GH #3)
+
 0.03     2015-05-22
         - Kwalitee improvements
 

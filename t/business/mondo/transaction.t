@@ -29,18 +29,27 @@ can_ok(
         to_json
         TO_JSON
 
-        id
-        description
-        notes
         account_balance
+        account_id
         amount
-        metadata
-        is_load
-        settled
-        merchant
-        currency
-        created
         attachments
+        category
+        counterparty
+        created
+        currency
+        dedupe_id
+        description
+        id
+        is_load
+        local_amount
+        local_currency
+        merchant
+        metadata
+        notes
+        originator
+        scheme
+        settled
+        updated
     /,
 );
 
