@@ -6,7 +6,7 @@ use warnings;
 use Test::Most;
 use Test::Deep;
 use Test::Exception;
-use Mojo::JSON;
+use Cpanel::JSON::XS;
 
 use Business::Mondo::Client;
 
@@ -19,7 +19,7 @@ isa_ok(
     my $Merchant = Business::Mondo::Merchant->new(
         "emoji"    => "💵",
         "updated"  => "2016-04-23T09:22:45.005Z",
-        "online"   => Mojo::JSON::false,
+        "online"   => Cpanel::JSON::XS::false,
         "category" => "cash",
         "metadata" => {
             "suggested_tags"      => "#money #ATM #cashpoint #cash ",
@@ -36,8 +36,8 @@ isa_ok(
             "twitter_id"               => "",
             "website"                  => ""
         },
-        "disable_feedback" => Mojo::JSON::false,
-        "atm"              => Mojo::JSON::true,
+        "disable_feedback" => Cpanel::JSON::XS::false,
+        "atm"              => Cpanel::JSON::XS::true,
         "logo"             => "",
         "group_id"         => "grp_0000000000000000000001",
         "id"               => "merch_0000000000000000000001",
@@ -51,7 +51,7 @@ isa_ok(
             "region"          => "",
             "formatted"       => "Villars-sur-o, 1884, Switzerland",
             "latitude"        => 46.3118929,
-            "approximate"     => Mojo::JSON::false,
+            "approximate"     => Cpanel::JSON::XS::false,
             "zoom_level"      => 17,
             "short_formatted" => "Villars-sur-o, 1884, Switzerland",
             "postcode"        => "1884"
