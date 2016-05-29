@@ -5,7 +5,6 @@ use warnings;
 
 use Mojolicious::Lite;
 use Mojo::JSON;
-use Data::Dumper;
 
 $ENV{MOJO_LOG_LEVEL} = 'debug';
 

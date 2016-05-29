@@ -12,12 +12,10 @@ WriteMakefile(
     LICENSE          => 'perl',
     MIN_PERL_VERSION => '5.10.1',
     PREREQ_PM => {
-        'Moo'                  => 1.006,
+        'Moo'                  => 2.001001,
         'Carp'                 => 0, # Carp was first released with perl 5
         'Throwable'            => 0.200011,
-        'LWP::UserAgent'       => 6.00,
-        'LWP::Protocol::https' => 6.00,
-        'Cpanel::JSON::XS'     => 3.0115,
+        'Mojolicious'          => 6.62,
         'Try::Tiny'            => 0.22,
         'Types::Standard'      => 1.000005,
         'Data::Currency'       => 0.06000,

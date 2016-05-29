@@ -22,8 +22,9 @@ use Business::Mondo::Exception;
 use Business::Mondo::Transaction;
 use Business::Mondo::Account;
 
-use LWP::UserAgent;
-use Cpanel::JSON::XS;
+use Data::Dumper;
+use Mojo::UserAgent;
+use Mojo::JSON;
 use Carp qw/ carp /;
 
 =head1 ATTRIBUTES
@@ -142,78 +143,49 @@ sub _api_request {
     carp( "$method -> $path" )
         if $ENV{MONDO_DEBUG};
 
-    my $ua = LWP::UserAgent->new;
-    $ua->agent( $self->user_agent );
+    my $ua = Mojo::UserAgent->new;
+    $ua->transactor->name( $self->user_agent );
 
     $path = $self->_add_query_params( $path,$params )
         if $method =~ /GET/;
 
-    my $req = $self->_build_request( $method,$path );
+    my $tx;
+    $method = lc( $method );
 
-    if ( $method =~ /POST|PUT|PATCH/ ) {
-        if ( $params ) {
-            $req->content_type( 'application/x-www-form-urlencoded; charset=utf-8' );
-            $req->content( $self->normalize_params( $params ) );
+    $path = $path =~ /^http/ ? $path : join( '/',$self->api_url,$path );
 
-            carp( $req->content )
-                if $ENV{MONDO_DEBUG};
-        }
+    carp( "PATH: $path" )
+        if $ENV{MONDO_DEBUG};
+
+    carp( "PARAMS: " . Dumper $params )
+        if $ENV{MONDO_DEBUG};
+
+    my %headers = (
+        'Authorization' => "Bearer " . $self->token,
+        'Accept'        => 'application/json',
+    );
+
+    if ( $method =~ /POST|PUT|PATCH/i ) {
+        $tx = $ua->$method( $path => { %headers } => form => $params );
+    } else {
+        $tx = $ua->$method( $path => { %headers } );
     }
 
-    my $res = $ua->request( $req );
-
-    if ( $res->is_success ) {
-        my $data = $res->content;
-
-        if ( $res->headers->header( 'content-type' ) =~ m!application/json! ) {
-            $data = decode_json( $data );
-        }
-
-        return $data;
+    if ( $tx->success ) {
+        return $tx->res->json;
     }
     else {
+        my $error = $tx->error;
 
-        carp( "RES: @{[ $res->code ]}" )
+        carp( "ERROR: " . Dumper $error )
             if $ENV{MONDO_DEBUG};
 
         Business::Mondo::Exception->throw({
-            message  => $res->content,
-            code     => $res->code,
-            response => $res->status_line,
+            message  => $error->{message},
+            code     => $error->{code},
+            response => $tx->res->body,
         });
     }
-}
-
-sub _build_request {
-    my ( $self,$method,$path ) = @_;
-
-    my $req = HTTP::Request->new(
-        # passing through the absolute URL means we don't build it
-        $method => $path =~ /^http/
-            ? $path : join( '/',$self->api_url,$path ),
-    );
-
-    carp(
-        $method => $path =~ /^http/
-            ? $path : join( '/',$self->api_url,$path ),
-    ) if $ENV{MONDO_DEBUG};
-
-    $self->_set_request_headers( $req );
-
-    return $req;
-}
-
-sub _set_request_headers {
-    my ( $self,$req ) = @_;
-
-    my $auth_string = "Bearer " . $self->token;
-
-    $req->header( 'Authorization' => $auth_string );
-
-    carp( "Authorization: $auth_string" )
-        if $ENV{MONDO_DEBUG};
-
-    $req->header( 'Accept' => 'application/json' );
 }
 
 sub _add_query_params {

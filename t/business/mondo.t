@@ -7,6 +7,7 @@ use Test::Most;
 use Test::Deep;
 use Test::MockObject;
 use Test::Exception;
+use Mojo::JSON qw/ decode_json /;
 
 # this makes Business::Mondo::Exception show a stack
 # trace when any error is thrown so i don't have to keep
@@ -35,15 +36,19 @@ can_ok(
 
 isa_ok( $Mondo->client,'Business::Mondo::Client' );
 
-# monkey patching LWP here to make this test work without
+# monkey patching Mojo::UserAgent here to make this test work without
 # having to actually hit the endpoints or use credentials
 no warnings 'redefine';
 no warnings 'once';
 my $mock = Test::MockObject->new;
-$mock->mock( 'is_success',sub { 1 } );
+$mock->mock( 'success',sub { 1 } );
 $mock->mock( 'headers',sub { $mock } );
-$mock->mock( 'header',sub { 'application/json' } );
-*LWP::UserAgent::request = sub { $mock };
+$mock->mock( 'res',sub { $mock } );
+$mock->mock( 'json',sub { $mock } );
+*Mojo::UserAgent::post = sub { $mock };
+*Mojo::UserAgent::put = sub { $mock };
+*Mojo::UserAgent::patch = sub { $mock };
+*Mojo::UserAgent::get = sub { $mock };
 
 test_transaction( $Mondo,$mock );
 test_account( $Mondo,$mock );
@@ -65,14 +70,14 @@ sub test_transaction {
 
     note( "Transaction" );
 
-    $mock->mock( 'content',sub { _transaction_json() } );
+    $mock->mock( 'json',sub { _transaction_json() } );
 
     isa_ok(
         my $Transaction = $Mondo->transaction( id => 1 ),
         'Business::Mondo::Transaction'
     );
 
-    $mock->mock( 'content',sub { _transactions_json() } );
+    $mock->mock( 'json',sub { _transactions_json() } );
 
     isa_ok(
         $Transaction = ( $Mondo->transactions( account_id => 1 ) )[1],
@@ -86,7 +91,7 @@ sub test_account {
 
     note( "Account" );
 
-    $mock->mock( 'content',sub { _accounts_json() } );
+    $mock->mock( 'json',sub { _accounts_json() } );
 
     isa_ok(
         my $Account = ( $Mondo->accounts )[1],
@@ -98,7 +103,7 @@ sub test_balance {
 
     my ( $Mondo,$mock ) = @_;
 
-    $mock->mock( 'content',sub { _balance_json() } );
+    $mock->mock( 'json',sub { _balance_json() } );
 
     isa_ok(
         $Mondo->balance( account_id => 1 ),
@@ -109,8 +114,6 @@ sub test_balance {
 sub test_attachment {
 
     my ( $Mondo,$mock ) = @_;
-
-#    $mock->mock( 'content',sub { _balance_json() } );
 
     isa_ok(
         $Mondo->upload_attachment(
@@ -123,7 +126,7 @@ sub test_attachment {
 
 sub _transaction_json {
 
-    return qq{{
+    return decode_json( qq{{
     "transaction": {
         "account_balance": 13013,
         "amount": -510,
@@ -154,13 +157,13 @@ sub _transaction_json {
         "is_load": false,
         "settled": "2015-08-23T12:20:18Z"
     }
-}};
+}} );
 
 }
 
 sub _transactions_json {
 
-    return qq{{
+    return decode_json( qq{{
     "transactions": [
         {
         "account_balance": 13013,
@@ -189,13 +192,13 @@ sub _transactions_json {
         "settled": "2015-08-23T12:20:18Z"
         }
     ]
-}};
+}} );
 
 }
 
 sub _accounts_json {
 
-    return qq{{
+    return decode_json( qq{{
     "accounts": [
         {
             "id": "acc_00009237aqC8c5umZmrRdh",
@@ -208,17 +211,17 @@ sub _accounts_json {
             "created": "2015-11-13T12:17:42Z"
         }
     ]
-}};
+}} );
 
 }
 
 sub _balance_json {
 
-    return qq{{
+    return decode_json( qq{{
         "balance" : 5000,
         "currency" : "GBP",
         "soend_today" : 0
-    }};
+    }} );
 }
 
 # vim: ts=4:sw=4:et

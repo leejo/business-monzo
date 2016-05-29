@@ -36,7 +36,7 @@ can_ok(
         url
         get
         to_hash
-        to_json
+        as_json
         TO_JSON
 
         address
@@ -72,7 +72,7 @@ is(
 );
 
 ok( $Address->to_hash,'to_hash' );
-ok( $Address->as_json,'to_json' );
+ok( $Address->as_json,'as_json' );
 ok( $Address->TO_JSON,'TO_JSON' );
 
 done_testing();

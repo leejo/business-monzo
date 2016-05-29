@@ -32,7 +32,7 @@ can_ok(
         url
         get
         to_hash
-        to_json
+        as_json
         TO_JSON
 
         id
@@ -136,7 +136,7 @@ ok( my @webhooks = $Account->webhooks,'->webhooks' );
 is( $webhooks[1]->callback_url,'https://bar',' ... has list' );
 
 ok( $Account->to_hash,'to_hash' );
-ok( $Account->as_json,'to_json' );
+ok( $Account->as_json,'as_json' );
 ok( $Account->TO_JSON,'TO_JSON' );
 
 *Business::Mondo::Client::api_get = sub {

@@ -16,7 +16,7 @@ use warnings;
 
 use Moo;
 use Carp qw/ confess carp /;
-use Cpanel::JSON::XS;
+use Mojo::JSON qw/ encode_json /;
 use Scalar::Util qw/ blessed /;
 use Try::Tiny;
 
@@ -107,10 +107,7 @@ Returns a json string representation of the object.
 sub as_json {
     my ( $self ) = @_;
 
-    return Cpanel::JSON::XS->new
-        ->convert_blessed
-        ->utf8
-        ->encode( { $self->to_hash } );
+    return encode_json( { $self->to_hash } );
 }
 
 # for JSON encoding modules (convert_blessed)

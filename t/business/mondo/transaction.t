@@ -6,6 +6,7 @@ use warnings;
 use Test::Most;
 use Test::Deep;
 use Test::Exception;
+use Mojo::JSON;
 
 use Business::Mondo::Client;
 
@@ -26,7 +27,7 @@ can_ok(
         url
         get
         to_hash
-        to_json
+        as_json
         TO_JSON
 
         account_balance
@@ -79,7 +80,7 @@ isa_ok(
 );
 
 ok( $Transaction->to_hash,'to_hash' );
-ok( $Transaction->as_json,'to_json' );
+ok( $Transaction->as_json,'as_json' );
 ok( $Transaction->TO_JSON,'TO_JSON' );
 
 done_testing();
@@ -143,7 +144,7 @@ sub _transaction {
             ],
             "metadata" => $metadata // {},
             "notes"    => "Salmon sandwich 🍞",
-            "is_load"  => Cpanel::JSON::XS::false,
+            "is_load"  => Mojo::JSON::false,
             "settled"  => "2015-08-22T12:20:18Z",
         }
     };

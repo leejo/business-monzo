@@ -35,7 +35,7 @@ can_ok(
         url
         get
         to_hash
-        to_json
+        as_json
         TO_JSON
 
         id
@@ -109,7 +109,7 @@ isa_ok( $Attachment = $Attachment->register(
 ok( $Attachment->deregister,'->deregister' );
 
 ok( $Attachment->to_hash,'to_hash' );
-ok( $Attachment->as_json,'to_json' );
+ok( $Attachment->as_json,'as_json' );
 ok( $Attachment->TO_JSON,'TO_JSON' );
 
 done_testing();

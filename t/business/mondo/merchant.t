@@ -6,7 +6,7 @@ use warnings;
 use Test::Most;
 use Test::Deep;
 use Test::Exception;
-use Cpanel::JSON::XS;
+use Mojo::JSON;
 
 use Business::Mondo::Client;
 
@@ -19,7 +19,7 @@ isa_ok(
     my $Merchant = Business::Mondo::Merchant->new(
         "emoji"    => "💵",
         "updated"  => "2016-04-23T09:22:45.005Z",
-        "online"   => Cpanel::JSON::XS::false,
+        "online"   => Mojo::JSON::false,
         "category" => "cash",
         "metadata" => {
             "suggested_tags"      => "#money #ATM #cashpoint #cash ",
@@ -36,8 +36,8 @@ isa_ok(
             "twitter_id"               => "",
             "website"                  => ""
         },
-        "disable_feedback" => Cpanel::JSON::XS::false,
-        "atm"              => Cpanel::JSON::XS::true,
+        "disable_feedback" => Mojo::JSON::false,
+        "atm"              => Mojo::JSON::true,
         "logo"             => "",
         "group_id"         => "grp_0000000000000000000001",
         "id"               => "merch_0000000000000000000001",
@@ -51,7 +51,7 @@ isa_ok(
             "region"          => "",
             "formatted"       => "Villars-sur-o, 1884, Switzerland",
             "latitude"        => 46.3118929,
-            "approximate"     => Cpanel::JSON::XS::false,
+            "approximate"     => Mojo::JSON::false,
             "zoom_level"      => 17,
             "short_formatted" => "Villars-sur-o, 1884, Switzerland",
             "postcode"        => "1884"
@@ -67,7 +67,7 @@ can_ok(
         url
         get
         to_hash
-        to_json
+        as_json
         TO_JSON
 
         id
@@ -108,7 +108,7 @@ isa_ok( $Merchant->address,'Business::Mondo::Address' );
 isa_ok( $Merchant->created,'DateTime' );
 
 ok( $Merchant->to_hash,'to_hash' );
-ok( $Merchant->as_json,'to_json' );
+ok( $Merchant->as_json,'as_json' );
 ok( $Merchant->TO_JSON,'TO_JSON' );
 
 done_testing();
