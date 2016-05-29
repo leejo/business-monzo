@@ -15,7 +15,7 @@ use warnings;
 
 use Moo::Role;
 
-$Business::Mondo::VERSION     = '0.05';
+$Business::Mondo::VERSION     = '0.06';
 $Business::Mondo::API_VERSION = 'v1';
 $Business::Mondo::API_URL     = 'https://api.getmondo.co.uk';
 

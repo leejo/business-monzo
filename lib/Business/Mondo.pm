@@ -11,7 +11,7 @@ Business::Mondo - Perl library for interacting with the Mondo API
 
 =head1 VERSION
 
-0.05
+0.06
 
 =head1 DESCRIPTION
 
@@ -214,7 +214,7 @@ sub transactions {
     return Business::Mondo::Account->new(
         client => $self->client,
         id     => $params{account_id},
-    )->transactions;
+    )->transactions( 'expand[]' => 'merchant' );
 }
 
 =head2 balance

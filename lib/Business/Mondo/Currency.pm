@@ -26,6 +26,7 @@ has [ qw/ currency local_currency / ] => (
         return undef if ! $args;
 
         if ( ! ref( $args ) ) {
+
             $args = Data::Currency->new({
                 code => $args,
             });

@@ -22,6 +22,7 @@ use Types::Standard qw/ :all /;
 use Business::Mondo::Merchant;
 use Business::Mondo::Attachment;
 use DateTime::Format::DateParse;
+use Locale::Currency::Format;
 
 =head1 ATTRIBUTES
 
@@ -185,6 +186,23 @@ sub annotate {
 sub annotations {
     return shift->metadata;
 }
+
+sub BUILD {
+    my ( $self,$args ) = @_;
+
+    foreach my $c ( 'local_','' ) {
+
+        my $amount_accessor   = "${c}amount";
+        my $currency_accessor = "${c}currency";
+
+        if ( my $amount = $self->$amount_accessor ) {
+            my $decimal_precision = decimal_precision( $self->$currency_accessor->code );
+            my $value = $amount / ( 10 ** $decimal_precision );
+            $self->$currency_accessor->value( $value );
+        }
+    }
+
+};
 
 =head1 SEE ALSO
 

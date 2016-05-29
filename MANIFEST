@@ -3,6 +3,7 @@ Makefile.PL
 MANIFEST
 README.md
 end_to_end_emulated.sh
+bin/mondojo
 lib/Business/Mondo.pm
 lib/Business/Mondo/Account.pm
 lib/Business/Mondo/Address.pm

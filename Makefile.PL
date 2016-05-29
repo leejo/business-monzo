@@ -21,6 +21,7 @@ WriteMakefile(
         'Data::Currency'       => 0.06000,
         'DateTime'             => 1.26,
         'DateTime::Format::DateParse' => 0.05,
+        'Locale::Currency::Format' => 1.35,
     },
     TEST_REQUIRES => {
         'Test::Most'       => 0.31,

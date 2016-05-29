@@ -80,8 +80,10 @@ sub to_hash {
 
     delete( $hash{client} );
 
-    if ( blessed( $hash{currency} ) ) {
-        $hash{currency} = $hash{currency}->code;
+    foreach my $currency_key ( qw/ currency local_currency / ) {
+        if ( blessed( $hash{$currency_key} ) ) {
+            $hash{$currency_key} = $hash{$currency_key}->code;
+        }
     }
 
     foreach my $k ( keys %hash ) {
@@ -89,7 +91,7 @@ sub to_hash {
             $hash{$k} = $hash{$k}->iso8601;
         } elsif ( my $blessed = blessed( $hash{$k} ) ) {
             next if $blessed =~ /Boolean/;
-            $hash{$k} = $hash{$k}->to_hash;
+            $hash{$k} = { $hash{$k}->to_hash };
         }
     }
 
