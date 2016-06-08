@@ -22,6 +22,7 @@ use Types::Standard qw/ :all /;
 use Business::Mondo::Merchant;
 use Business::Mondo::Attachment;
 use DateTime::Format::DateParse;
+use Locale::Currency::Format;
 
 =head1 ATTRIBUTES
 
@@ -68,6 +69,22 @@ has [ qw/ account_balance amount local_amount / ] => (
     is  => 'ro',
     isa => Int,
 );
+
+sub BUILD {
+    my ( $self,$args ) = @_;
+
+    if ( my $c = $self->currency ) {
+        my $decimal_precision = decimal_precision( $c->code );
+        $c->value( $self->amount / ( 10 ** $decimal_precision ) );
+    }
+
+    if ( my $c = $self->local_currency ) {
+        my $decimal_precision = decimal_precision( $c->code );
+        $c->value( $self->local_amount / ( 10 ** $decimal_precision ) );
+    }
+
+    return;
+};
 
 has [ qw/ counterparty metadata / ] => (
     is  => 'ro',

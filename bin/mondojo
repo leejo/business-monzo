@@ -23,23 +23,19 @@ get '/' => sub {
 get '/map' => sub {
 	my ( $c ) = @_;
 
-	my $map = HTML::GoogleMaps::V3->new(
-		zoom => 4,
-	);
+	my $map          = HTML::GoogleMaps::V3->new( zoom => 8 );
+	my @transactions = _get_transactions();
 
-	# TODO: get user's current location
-	$map->center( 'Paris' );
-
-	foreach my $t ( _get_transactions() ) {
+	foreach my $t ( @transactions ) {
 		if ( my $m = $t->merchant ) {
 			if ( my $addr = $m->address ) {
 				$map->add_marker(
-					html  => $c->render_to_string(
-						'marker',
-						merchant => $m,
-					),
+#					html  => $c->render_to_string( 'marker',merchant => $m ),
 					point => [ $addr->longitude,$addr->latitude ]
 				);
+
+				# center around most recent transaction
+				$map->center( [ $addr->longitude,$addr->latitude ] );
 			}
 		}
 	}
@@ -47,9 +43,10 @@ get '/map' => sub {
 	my ( $head,$map_div ) = $map->onload_render;
 
 	$c->render(
-		template => 'map',
-		head     => $head,
-		map      => $map_div,
+		template     => 'map',
+		head         => $head,
+		map          => $map_div,
+		transactions => [ @transactions ],
 	);
 };
 
@@ -57,29 +54,25 @@ app->start;
 
 sub _get_transactions {
 
-	my $data;
-	my $mondo = Business::Mondo->new(
-		token => $ENV{MONDOJO_TOKEN}
-	);
+	my @transactions;
+
+	my $mondo = Business::Mondo->new( token => $ENV{MONDOJO_TOKEN} );
 
 	if ( my $file = $ENV{MONDOJO_TEST_FILE} ) {
-		$data = decode_json(
-			Encode::encode( 'UTF-8',read_text( $file ) )
-		);
+		my $data = decode_json( Encode::encode( 'UTF-8',read_text( $file ) ) );
+
+		foreach my $e ( @{ $data->{transactions} // [] } ) {
+			push( @transactions,Business::Mondo::Transaction->new(
+				%{ $e },
+				client => $mondo->client,
+			) );
+		}
+
 	} else {
-		return {};
+		@transactions = $mondo->transctions;
 	}
 
-	my @objects;
-
-	foreach my $e ( @{ $data->{transactions} // [] } ) {
-		push( @objects,Business::Mondo::Transaction->new(
-			%{ $e },
-			client => $mondo->client,
-		) );
-	}
-
-	return @objects;
+	return @transactions;
 }
 
 __DATA__
@@ -90,10 +83,19 @@ __DATA__
 	</head>
 	<body onload="html_googlemaps_initialize()">
 		<%== $map %>
+		<div class="transaction_list">
+		<% foreach my $transaction ( reverse @{ $transactions } ) { %>
+			<div class="transaction">
+				<%= $transaction->merchant->emoji if $transaction->merchant %>
+				<%= $transaction->local_currency %>
+				<%= $transaction->created %>
+			</div>
+		<% } %>
+		</div>
 	</body>
 </html>
 
 @@ marker.html.ep
 <div class="merchant_emoji">
-	<%== $merchant->emoji %>
+	<%== $merchant->name %>
 </div>

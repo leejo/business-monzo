@@ -24,6 +24,7 @@ has [ qw/ currency local_currency / ] => (
         my ( $args ) = @_;
 
         if ( ! ref( $args ) ) {
+
             $args = Data::Currency->new({
                 code => $args,
             });
