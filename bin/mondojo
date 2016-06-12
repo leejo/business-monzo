@@ -30,7 +30,6 @@ get '/map' => sub {
 		if ( my $m = $t->merchant ) {
 			if ( my $addr = $m->address ) {
 				$map->add_marker(
-#					html  => $c->render_to_string( 'marker',merchant => $m ),
 					point => [ $addr->longitude,$addr->latitude ]
 				);
 
@@ -77,8 +76,10 @@ sub _get_transactions {
 
 __DATA__
 @@ map.html.ep
+<!DOCTYPE HTML>
 <html>
 	<head>
+	    <meta charset="UTF-8">
 		<%== $head %>
 	</head>
 	<body onload="html_googlemaps_initialize()">
@@ -86,9 +87,9 @@ __DATA__
 		<div class="transaction_list">
 		<% foreach my $transaction ( reverse @{ $transactions } ) { %>
 			<div class="transaction">
-				<%= $transaction->merchant->emoji if $transaction->merchant %>
-				<%= $transaction->local_currency %>
-				<%= $transaction->created %>
+				<div class="emoji"><%= $transaction->merchant->emoji if $transaction->merchant %></div>
+				<div class="amount"><%= Encode::decode( 'UTF-8',$transaction->local_currency ) %></div>
+				<div class="date"><%= $transaction->created %></div>
 			</div>
 		<% } %>
 		</div>

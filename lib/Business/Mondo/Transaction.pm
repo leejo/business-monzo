@@ -70,22 +70,6 @@ has [ qw/ account_balance amount local_amount / ] => (
     isa => Int,
 );
 
-sub BUILD {
-    my ( $self,$args ) = @_;
-
-    if ( my $c = $self->currency ) {
-        my $decimal_precision = decimal_precision( $c->code );
-        $c->value( $self->amount / ( 10 ** $decimal_precision ) );
-    }
-
-    if ( my $c = $self->local_currency ) {
-        my $decimal_precision = decimal_precision( $c->code );
-        $c->value( $self->local_amount / ( 10 ** $decimal_precision ) );
-    }
-
-    return;
-};
-
 has [ qw/ counterparty metadata / ] => (
     is  => 'ro',
     isa => HashRef,
@@ -202,6 +186,25 @@ sub annotate {
 sub annotations {
     return shift->metadata;
 }
+
+sub BUILD {
+    my ( $self,$args ) = @_;
+
+    foreach my $c ( 'local_','' ) {
+
+        my $amount_accessor   = "${c}amount";
+        my $currency_accessor = "${c}currency";
+
+        if ( my $amount = $self->$amount_accessor ) {
+            my $decimal_precision = decimal_precision( $self->$currency_accessor->code );
+            my $value = $amount / ( 10 ** $decimal_precision );
+            $self->$currency_accessor->value( $value );
+use Devel::Peek;
+warn $self->$currency_accessor;
+        }
+    }
+
+};
 
 =head1 SEE ALSO
 
