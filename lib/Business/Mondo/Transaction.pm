@@ -199,8 +199,6 @@ sub BUILD {
             my $decimal_precision = decimal_precision( $self->$currency_accessor->code );
             my $value = $amount / ( 10 ** $decimal_precision );
             $self->$currency_accessor->value( $value );
-use Devel::Peek;
-warn $self->$currency_accessor;
         }
     }
 

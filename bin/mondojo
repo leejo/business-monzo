@@ -45,7 +45,7 @@ get '/map' => sub {
 		template     => 'map',
 		head         => $head,
 		map          => $map_div,
-		transactions => [ @transactions ],
+		transactions => [ (reverse(@transactions))[0..7] ],
 	);
 };
 
@@ -55,43 +55,51 @@ sub _get_transactions {
 
 	my @transactions;
 
-	my $mondo = Business::Mondo->new( token => $ENV{MONDOJO_TOKEN} );
+	if ( $ENV{MONDOJO_TOKEN} && $ENV{MONDOJO_ACCOUNT_ID} ) {
 
-	if ( my $file = $ENV{MONDOJO_TEST_FILE} ) {
+		my $mondo = Business::Mondo->new( token => $ENV{MONDOJO_TOKEN} );
+		@transactions = $mondo->transactions( account_id => $ENV{MONDOJO_ACCOUNT_ID} );
+
+	} elsif ( my $file = $ENV{MONDOJO_TEST_FILE} ) {
 		my $data = decode_json( Encode::encode( 'UTF-8',read_text( $file ) ) );
 
 		foreach my $e ( @{ $data->{transactions} // [] } ) {
 			push( @transactions,Business::Mondo::Transaction->new(
 				%{ $e },
-				client => $mondo->client,
+				client => Business::Mondo->new->client,
 			) );
 		}
 
-	} else {
-		@transactions = $mondo->transctions;
 	}
 
 	return @transactions;
 }
 
 __DATA__
+@@ map.css.ep
+
 @@ map.html.ep
 <!DOCTYPE HTML>
 <html>
 	<head>
 	    <meta charset="UTF-8">
+		<link href="map.css" rel="stylesheet" />
 		<%== $head %>
 	</head>
 	<body onload="html_googlemaps_initialize()">
-		<%== $map %>
-		<div class="transaction_list">
-		<% foreach my $transaction ( reverse @{ $transactions } ) { %>
-			<div class="transaction">
-				<div class="emoji"><%= $transaction->merchant->emoji if $transaction->merchant %></div>
-				<div class="amount"><%= Encode::decode( 'UTF-8',$transaction->local_currency ) %></div>
-				<div class="date"><%= $transaction->created %></div>
+		<div class="box">
+			<%== $map %>
+			<div class="transaction_list">
+			<% foreach my $transaction ( @{ $transactions } ) { %>
+				<div class="transaction">
+					<%= $transaction->merchant->emoji if $transaction->merchant %> /
+					<%= Encode::decode( 'UTF-8',$transaction->currency ) %> /
+					<%= Encode::decode( 'UTF-8',$transaction->local_currency ) %> /
+					<%= $transaction->created %> /
+					<%= $transaction->merchant->name if $transaction->merchant %>
+				</div>
+			<% } %>
 			</div>
-		<% } %>
 		</div>
 	</body>
 </html>

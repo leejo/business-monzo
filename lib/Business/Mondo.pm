@@ -214,7 +214,7 @@ sub transactions {
     return Business::Mondo::Account->new(
         client => $self->client,
         id     => $params{account_id},
-    )->transactions;
+    )->transactions( 'expand[]' => 'merchant' );
 }
 
 =head2 balance
