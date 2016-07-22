@@ -1,5 +1,9 @@
 Revision history for Business-Mondo
 
+0.05     2015-07-22
+        - Use Any type for Booleans as some test failures with Bool related
+          to incorrect coercion (?) of JSON::PP boolean types (GH #4)
+
 0.04     2015-05-28
         - Add missing attributes to Transaction and Merchant objects (GH #3)
 

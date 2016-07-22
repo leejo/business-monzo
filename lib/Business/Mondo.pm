@@ -11,7 +11,7 @@ Business::Mondo - Perl library for interacting with the Mondo API
 
 =head1 VERSION
 
-0.04
+0.05
 
 =head1 DESCRIPTION
 
