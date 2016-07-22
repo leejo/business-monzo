@@ -57,7 +57,7 @@ has [ qw/ metadata / ] => (
 
 has [ qw/ online atm disable_feedback / ] => (
     is  => 'ro',
-    isa => Bool,
+    isa => Any,
 );
 
 has address => (
