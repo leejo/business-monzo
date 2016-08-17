@@ -23,6 +23,8 @@ has [ qw/ currency local_currency / ] => (
     coerce  => sub {
         my ( $args ) = @_;
 
+        return undef if ! $args;
+
         if ( ! ref( $args ) ) {
 
             $args = Data::Currency->new({

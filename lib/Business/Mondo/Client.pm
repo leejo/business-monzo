@@ -172,6 +172,9 @@ sub _api_request {
     }
 
     if ( $tx->success ) {
+        carp( "RES: " . Dumper $tx->res->json )
+            if $ENV{MONDO_DEBUG};
+
         return $tx->res->json;
     }
     else {
