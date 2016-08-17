@@ -77,7 +77,7 @@ has [ qw/ counterparty metadata / ] => (
 
 has [ qw/ is_load originator / ] => (
     is  => 'ro',
-    isa => Bool,
+    isa => Any,
 );
 
 has merchant => (

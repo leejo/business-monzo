@@ -4,7 +4,7 @@
 morbo mondo_emulator.pl -l 'https://*:3000' &
 sleep 2;
 
-# get an access token
+# get an access token (requires httpie here)
 ACCESS_TOKEN=$(http --verify no --form POST "https://127.0.0.1:3000/oauth2/token" \
     "grant_type=password" \
     "client_id=test_client" \
