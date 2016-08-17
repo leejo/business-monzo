@@ -31,14 +31,32 @@ $ENV{MONDO_DEBUG} = 1;
 note( "Mondo" );
 my $Mondo = Business::Mondo->new(
     token   => $token,
-    api_url => $url
+    ( $url ? ( api_url => $url ) : () ),
 );
 
 isa_ok( $Mondo,'Business::Mondo' );
 
+note( "Account" );
+my @accounts = $Mondo->accounts;
+
+isa_ok(
+	my $Account = $accounts[0],
+	'Business::Mondo::Account'
+);
+
+my @transactions = $Mondo->transactions( account_id => $Account->id );
+
+isa_ok(
+	my $Transaction = $transactions[0],
+    'Business::Mondo::Transaction',
+);
+
 note( "Transaction" );
 isa_ok(
-    my $Transaction = $Mondo->transaction( id => 1, expand => 'merchant' ),
+    $Transaction = $Mondo->transaction(
+		id => $Transaction->id,
+		expand => 'merchant'
+	),
     'Business::Mondo::Transaction'
 );
 
@@ -47,41 +65,30 @@ isa_ok(
     'Business::Mondo::Transaction',
 );
 
-isa_ok(
-	$Transaction->attachments->[1],
-	'Business::Mondo::Attachment',
-);
+my $time = time;
 
 isa_ok(
-    $Transaction->annotate( foo => 'bar' ),
+    $Transaction = $Transaction->annotate(
+		testing_at => $time,
+	),
     'Business::Mondo::Transaction',
 );
 
 cmp_deeply(
-    $Transaction->annotations,
+    my $annotations = $Transaction->annotations,
     {
-        stuff      => 'yes',
-        more_stuff => 'yep',
+        testing_at => $time,
     },
     '->annotations',
 );
 
-isa_ok(
-    ( $Mondo->transactions( account_id => 1 ) )[1],
-    'Business::Mondo::Transaction',
-);
-
-note( "Account" );
-isa_ok(
-    my $Account = ( $Mondo->accounts )[0],
-    'Business::Mondo::Account',
-);
-
 ok( $Account->add_feed_item(
-    params => {
-        title     => 'foo',
-        image_url => 'bar',
-    }
+	url => 'https://metacpan.org/release/Business-Mondo',
+	params => {
+		title     => 'Hello from the perl API client',
+		image_url => 'http://pix.iemoji.com/images/emoji/apple/ios-9/256/dromedary-camel.png',
+		body      => '🐪',
+	}
 ),'->add_feed_item' );
 
 note( "Webhook" );
@@ -90,16 +97,19 @@ isa_ok( my $Webhook = $Account->register_webhook(
 ),'Business::Mondo::Webhook' );
 
 ok( my @webhooks = $Account->webhooks,'->webhooks' );
-ok( $Webhook->delete,'->delete' );
+
+foreach $Webhook ( @webhooks ) {
+	ok( $Webhook->delete,'->delete' );
+}
 
 note( "Balance" );
 isa_ok(
-	my $Balance = $Mondo->balance( account_id => 1 ),
+	my $Balance = $Mondo->balance( account_id => $Account->id ),
 	'Business::Mondo::Balance'
 );
 
-is( $Balance->account_id,'1','->account_id' );
-is( $Balance->balance,5000,'->balance' );
+like( $Balance->account_id,qr/acc_0000/,'->account_id' );
+ok( $Balance->balance,'->balance' );
 isa_ok( $Balance->currency,'Data::Currency','->currency' );
 is( $Balance->spend_today,0,'->spend_today' );
 
@@ -111,21 +121,23 @@ isa_ok( my $Attachment = $Mondo->upload_attachment(
 
 is( $Attachment->file_name,'foo.png','->file_name' );
 is( $Attachment->file_type,'image/png','->file_type' );
-is( $Attachment->file_url,'https://127.0.0.1:3000/file/user_00009237hliZellUicKuG1/LcCu4ogv1xW28OCcvOTL-foo.png','->file_url' );
-is( $Attachment->upload_url,'https://127.0.0.1:3000/upload/user_00009237hliZellUicKuG1/LcCu4ogv1xW28OCcvOTL-foo.png?AWSAccessKeyId=AKIAIR3IFH6UCTCXB5PQ0026Expires=14473534310026Signature=k2QeDCCQQHaZeynzYKckejqXRGU%!D(MISSING)','->upload_url' );
+like( $Attachment->file_url,qr/^http/,'->file_url' );
+like( $Attachment->upload_url,qr/^http/,'->upload_url' );
 
 isa_ok( $Attachment = $Attachment->register(
-	external_id => 'my_id'
+	external_id => $Transaction->id,
+	file_url    => 'http://www.nyan.cat/cats/original.gif',
+	file_type   => 'image/gif',
 ),'Business::Mondo::Attachment' );
 
-is( $Attachment->user_id,'user_00009238aMBIIrS5Rdncq9','->user_id' );
+like( $Attachment->user_id,qr/user_/,'->user_id' );
 isa_ok( $Attachment->created,'DateTime' );
-is( $Attachment->external_id,'my_id','->id' );
-is( $Attachment->id,'attach_00009238aOAIvVqfb9LrZh','->id' );
-is( $Attachment->file_name,'foo.png','->file_name' );
-is( $Attachment->file_type,'image/png','->file_type' );
-is( $Attachment->file_url,'https://127.0.0.1:3000/file/user_00009237hliZellUicKuG1/LcCu4ogv1xW28OCcvOTL-foo.png','->file_url' );
-is( $Attachment->upload_url,'https://127.0.0.1:3000/upload/user_00009237hliZellUicKuG1/LcCu4ogv1xW28OCcvOTL-foo.png?AWSAccessKeyId=AKIAIR3IFH6UCTCXB5PQ0026Expires=14473534310026Signature=k2QeDCCQQHaZeynzYKckejqXRGU%!D(MISSING)','->upload_url' );
+is( $Attachment->external_id,$Transaction->id,'->id' );
+like( $Attachment->id,qr/attach_/,'->id' );
+ok( $Attachment->file_name,'->file_name' );
+is( $Attachment->file_type,'image/gif','->file_type' );
+like( $Attachment->file_url,qr/^http/,'->file_url' );
+like( $Attachment->upload_url,qr/^http/,'->upload_url' );
 
 ok( $Attachment->deregister,'->deregister' );
 

@@ -195,7 +195,7 @@ group {
                 "user_id" => "user_00009238aMBIIrS5Rdncq9",
                 "external_id" => $external_id,
                 "file_url" => $file_url,
-                "file_type" => "image/png",
+                "file_type" => $file_type,
                 "created" => "2015-11-12T18:37:02Z"
             }
         } );
