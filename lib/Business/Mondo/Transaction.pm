@@ -1,12 +1,12 @@
-package Business::Mondo::Transaction;
+package Business::Monzo::Transaction;
 
 =head1 NAME
 
-Business::Mondo::Transaction
+Business::Monzo::Transaction
 
 =head1 DESCRIPTION
 
-A class for a Mondo transaction, extends L<Business::Mondo::Resource>
+A class for a Monzo transaction, extends L<Business::Monzo::Resource>
 
 =cut
 
@@ -14,13 +14,13 @@ use strict;
 use warnings;
 
 use Moo;
-extends 'Business::Mondo::Resource';
-with 'Business::Mondo::Utils';
-with 'Business::Mondo::Currency';
+extends 'Business::Monzo::Resource';
+with 'Business::Monzo::Utils';
+with 'Business::Monzo::Currency';
 
 use Types::Standard qw/ :all /;
-use Business::Mondo::Merchant;
-use Business::Mondo::Attachment;
+use Business::Monzo::Merchant;
+use Business::Monzo::Attachment;
 use DateTime::Format::DateParse;
 use Locale::Currency::Format;
 
@@ -42,16 +42,16 @@ The Transaction class has the following attributes (with their type).
     metadata (HashRef)
     is_load (Bool)
     originator (Bool)
-    merchant (Business::Mondo::Merchant)
+    merchant (Business::Monzo::Merchant)
     currency (Data::Currency)
     local_currency (Data::Currency)
     created (DateTime)
     updated (DateTime)
     settled (DateTime)
-    attachments (ArrayRef[Business::Mondo::Attachment])
+    attachments (ArrayRef[Business::Monzo::Attachment])
 
 Note that if a HashRef or Str is passed to ->merchant it will be coerced
-into a Business::Mondo::Merchant object. When a Str is passed to ->currency
+into a Business::Monzo::Merchant object. When a Str is passed to ->currency
 / ->local_currency this will be coerced to a Data::Currency object, and
 when a Str is passed to ->created / ->updated / ->settled this will be
 coerced to a DateTime object.
@@ -82,7 +82,7 @@ has [ qw/ is_load originator / ] => (
 
 has merchant => (
     is      => 'ro',
-    isa     => Maybe[InstanceOf['Business::Mondo::Merchant']],
+    isa     => Maybe[InstanceOf['Business::Monzo::Merchant']],
     coerce  => sub {
         my ( $args ) = @_;
 
@@ -90,13 +90,13 @@ has merchant => (
 
         if ( ref( $args ) eq 'HASH' ) {
             return undef if ! keys %{ $args };
-            $args = Business::Mondo::Merchant->new(
-                client => $Business::Mondo::Resource::client,
+            $args = Business::Monzo::Merchant->new(
+                client => $Business::Monzo::Resource::client,
                 %{ $args },
             );
         } elsif ( ! ref( $args ) ) {
-            $args = Business::Mondo::Merchant->new(
-                client => $Business::Mondo::Resource::client,
+            $args = Business::Monzo::Merchant->new(
+                client => $Business::Monzo::Resource::client,
                 id     => $args,
             );
         }
@@ -107,7 +107,7 @@ has merchant => (
 
 has attachments => (
     is      => 'ro',
-    isa     => Maybe[ArrayRef[InstanceOf['Business::Mondo::Attachment']]],
+    isa     => Maybe[ArrayRef[InstanceOf['Business::Monzo::Attachment']]],
     coerce  => sub {
         my ( $args ) = @_;
 
@@ -116,8 +116,8 @@ has attachments => (
         my @attachments;
 
         foreach my $attachment ( @{ $args } ) {
-            push( @attachments,Business::Mondo::Attachment->new(
-                client => $Business::Mondo::Resource::client,
+            push( @attachments,Business::Monzo::Attachment->new(
+                client => $Business::Monzo::Resource::client,
                 %{ $attachment },
             ) );
         }
@@ -206,9 +206,9 @@ sub BUILD {
 
 =head1 SEE ALSO
 
-L<Business::Mondo>
+L<Business::Monzo>
 
-L<Business::Mondo::Resource>
+L<Business::Monzo::Resource>
 
 =head1 AUTHOR
 
@@ -220,7 +220,7 @@ This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself. If you would like to contribute documentation,
 features, bug fixes, or anything else then please raise an issue / pull request:
 
-    https://github.com/leejo/business-mondo
+    https://github.com/leejo/business-monzo
 
 =cut
 

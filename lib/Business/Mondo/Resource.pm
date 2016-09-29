@@ -1,12 +1,12 @@
-package Business::Mondo::Resource;
+package Business::Monzo::Resource;
 
 =head1 NAME
 
-Business::Mondo::Resource
+Business::Monzo::Resource
 
 =head1 DESCRIPTION
 
-This is a base class for Mondo resource classes, it implements common
+This is a base class for Monzo resource classes, it implements common
 behaviour. You shouldn't use this class directly, but extend it instead.
 
 =cut
@@ -24,7 +24,7 @@ use Try::Tiny;
 
 The Resource class has the following attributes (with their type).
 
-    client (Business::Mondo::Client) - REQUIRED
+    client (Business::Monzo::Client) - REQUIRED
     url (Str)
     url_no_id (Str)
 
@@ -33,10 +33,10 @@ The Resource class has the following attributes (with their type).
 has client => (
     is       => 'ro',
     isa      => sub {
-        confess( "$_[0] is not a Business::Mondo::Client" )
-            if ref $_[0] ne 'Business::Mondo::Client';
+        confess( "$_[0] is not a Business::Monzo::Client" )
+            if ref $_[0] ne 'Business::Monzo::Client';
 
-        $Business::Mondo::Resource::client = $_[0];
+        $Business::Monzo::Resource::client = $_[0];
     },
     required => 1,
 );
@@ -147,7 +147,7 @@ This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself. If you would like to contribute documentation,
 features, bug fixes, or anything else then please raise an issue / pull request:
 
-    https://github.com/leejo/business-mondo
+    https://github.com/leejo/business-monzo
 
 =cut
 

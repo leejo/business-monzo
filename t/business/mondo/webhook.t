@@ -7,23 +7,23 @@ use Test::Most;
 use Test::Deep;
 use Test::Exception;
 
-use Business::Mondo::Client;
+use Business::Monzo::Client;
 
-$Business::Mondo::Resource::client = Business::Mondo::Client->new(
+$Business::Monzo::Resource::client = Business::Monzo::Client->new(
     token      => 'foo',
 );
 
-use_ok( 'Business::Mondo::Webhook' );
+use_ok( 'Business::Monzo::Webhook' );
 isa_ok(
-    my $Webhook = Business::Mondo::Webhook->new(
+    my $Webhook = Business::Monzo::Webhook->new(
         "id"           => "webhook_id_123",
         "callback_url" => "https://foo.bar.com",
         "account"      => 1,
-        'client'       => Business::Mondo::Client->new(
+        'client'       => Business::Monzo::Client->new(
             token      => 'foo',
         ),
     ),
-    'Business::Mondo::Webhook'
+    'Business::Monzo::Webhook'
 );
 
 can_ok(
@@ -43,19 +43,19 @@ can_ok(
 
 throws_ok(
     sub { $Webhook->get },
-    'Business::Mondo::Exception'
+    'Business::Monzo::Exception'
 );
 
 is(
     $@->message,
-    'Mondo API does not currently support getting webhook data',
+    'Monzo API does not currently support getting webhook data',
     ' ... with expected message'
 );
 
-is( $Webhook->url,'https://api.getmondo.co.uk/webhooks/webhook_id_123','->url' );
+is( $Webhook->url,'https://api.getmonzo.co.uk/webhooks/webhook_id_123','->url' );
 
 no warnings 'redefine';
-*Business::Mondo::Client::api_delete = sub { {} };
+*Business::Monzo::Client::api_delete = sub { {} };
 
 ok( $Webhook->delete,'->delete' );
 

@@ -1,12 +1,12 @@
-package Business::Mondo::Account;
+package Business::Monzo::Account;
 
 =head1 NAME
 
-Business::Mondo::Account
+Business::Monzo::Account
 
 =head1 DESCRIPTION
 
-A class for a Mondo account, extends L<Business::Mondo::Resource>
+A class for a Monzo account, extends L<Business::Monzo::Resource>
 
 =cut
 
@@ -14,14 +14,14 @@ use strict;
 use warnings;
 
 use Moo;
-extends 'Business::Mondo::Resource';
-with 'Business::Mondo::Utils';
+extends 'Business::Monzo::Resource';
+with 'Business::Monzo::Utils';
 
 use Types::Standard qw/ :all /;
-use Business::Mondo::Address;
-use Business::Mondo::Balance;
-use Business::Mondo::Webhook;
-use Business::Mondo::Exception;
+use Business::Monzo::Address;
+use Business::Monzo::Balance;
+use Business::Monzo::Webhook;
+use Business::Monzo::Exception;
 
 =head1 ATTRIBUTES
 
@@ -66,14 +66,14 @@ has created => (
 =cut
 
 sub url {
-    Business::Mondo::Exception->throw({
-        message => "Mondo API does not currently support getting account data",
+    Business::Monzo::Exception->throw({
+        message => "Monzo API does not currently support getting account data",
     });
 }
 
 sub get {
-    Business::Mondo::Exception->throw({
-        message => "Mondo API does not currently support getting account data",
+    Business::Monzo::Exception->throw({
+        message => "Monzo API does not currently support getting account data",
     });
 }
 
@@ -102,7 +102,7 @@ sub add_feed_item {
     my ( $self,%params ) = @_;
 
     $params{params}{title} && $params{params}{image_url} ||
-        Business::Mondo::Exception->throw({
+        Business::Monzo::Exception->throw({
             message => "add_feed_item requires params: title, image_url",
         });
 
@@ -122,11 +122,11 @@ sub add_feed_item {
 
 =head2 register_webhook
 
-Registers a webhook against the Account. Returns a Business::Mondo::Webhook
+Registers a webhook against the Account. Returns a Business::Monzo::Webhook
 object. Note the required parameters:
 
     my $Webhook = $Account->webhooks(
-        callback_url => 'https://www.example.com/mondo/callback' # REQUIRED
+        callback_url => 'https://www.example.com/monzo/callback' # REQUIRED
     );
 
 =cut
@@ -134,7 +134,7 @@ object. Note the required parameters:
 sub register_webhook {
     my ( $self,%params ) = @_;
 
-    $params{callback_url} || Business::Mondo::Exception->throw({
+    $params{callback_url} || Business::Monzo::Exception->throw({
         message => "register_webhook requires params: callback_url",
     });
 
@@ -145,7 +145,7 @@ sub register_webhook {
 
     my $data = $self->client->api_post( 'webhooks',\%post_params );
 
-    return Business::Mondo::Webhook->new(
+    return Business::Monzo::Webhook->new(
         client       => $self->client,
         id           => $data->{webhook}{id},
         callback_url => $data->{webhook}{url},
@@ -155,7 +155,7 @@ sub register_webhook {
 
 =head2 webhooks
 
-Returns a list of Business::Mondo::Webhook objects linked to the Account
+Returns a list of Business::Monzo::Webhook objects linked to the Account
 
     my @webhooks = $Account->webhooks
 
@@ -174,7 +174,7 @@ sub webhooks {
 
         push(
             @webhooks,
-            Business::Mondo::Webhook->new(
+            Business::Monzo::Webhook->new(
                 client       => $self->client,
                 id           => $webhook->{id},
                 callback_url => $webhook->{url},
@@ -188,7 +188,7 @@ sub webhooks {
 
 =head2 transactions
 
-Returns a list of L<Business::Mondo::Transaction> objects for the
+Returns a list of L<Business::Monzo::Transaction> objects for the
 account
 
     my @transactions = $Account->transactions( %query_params );
@@ -206,8 +206,8 @@ sub transactions {
 
 =head2 balance
 
-Returns a L<Business::Mondo::Balance> object for the account with the
-attributes populated having called the Mondo API
+Returns a L<Business::Monzo::Balance> object for the account with the
+attributes populated having called the Monzo API
 
     $Balance = $Account->balance;
 
@@ -216,7 +216,7 @@ attributes populated having called the Mondo API
 sub balance {
     my ( $self ) = @_;
 
-    return Business::Mondo::Balance->new(
+    return Business::Monzo::Balance->new(
         client     => $self->client,
         account_id => $self->id,
     )->get;
@@ -224,13 +224,13 @@ sub balance {
 
 =head1 SEE ALSO
 
-L<Business::Mondo>
+L<Business::Monzo>
 
-L<Business::Mondo::Resource>
+L<Business::Monzo::Resource>
 
-L<Business::Mondo::Balance>
+L<Business::Monzo::Balance>
 
-L<Business::Mondo::Transaction>
+L<Business::Monzo::Transaction>
 
 =head1 AUTHOR
 
@@ -242,7 +242,7 @@ This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself. If you would like to contribute documentation,
 features, bug fixes, or anything else then please raise an issue / pull request:
 
-    https://github.com/leejo/business-mondo
+    https://github.com/leejo/business-monzo
 
 =cut
 

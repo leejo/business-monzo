@@ -1,12 +1,12 @@
-package Business::Mondo::Address;
+package Business::Monzo::Address;
 
 =head1 NAME
 
-Business::Mondo::Address
+Business::Monzo::Address
 
 =head1 DESCRIPTION
 
-A class for a Mondo address, extends L<Business::Mondo::Resource>
+A class for a Monzo address, extends L<Business::Monzo::Resource>
 
 =cut
 
@@ -14,12 +14,12 @@ use strict;
 use warnings;
 
 use Moo;
-extends 'Business::Mondo::Resource';
-with 'Business::Mondo::Utils';
+extends 'Business::Monzo::Resource';
+with 'Business::Monzo::Utils';
 
 use Types::Standard qw/ :all /;
-use Business::Mondo::Address;
-use Business::Mondo::Exception;
+use Business::Monzo::Address;
+use Business::Monzo::Exception;
 
 =head1 ATTRIBUTES
 
@@ -52,22 +52,22 @@ None at present
 =cut
 
 sub url {
-    Business::Mondo::Exception->throw({
-        message => "Mondo API does not currently support getting address data",
+    Business::Monzo::Exception->throw({
+        message => "Monzo API does not currently support getting address data",
     });
 }
 
 sub get {
-    Business::Mondo::Exception->throw({
-        message => "Mondo API does not currently support getting address data",
+    Business::Monzo::Exception->throw({
+        message => "Monzo API does not currently support getting address data",
     });
 }
 
 =head1 SEE ALSO
 
-L<Business::Mondo>
+L<Business::Monzo>
 
-L<Business::Mondo::Resource>
+L<Business::Monzo::Resource>
 
 =head1 AUTHOR
 
@@ -79,7 +79,7 @@ This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself. If you would like to contribute documentation,
 features, bug fixes, or anything else then please raise an issue / pull request:
 
-    https://github.com/leejo/business-mondo
+    https://github.com/leejo/business-monzo
 
 =cut
 

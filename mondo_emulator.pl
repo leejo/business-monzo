@@ -12,7 +12,7 @@ plugin 'OAuth2::Server' => {
     access_token_ttl   => 21600,
     authorize_route    => '/',
     access_token_route => '/oauth2/token',
-    jwt_secret         => "ThisIsMyMondoJWTSecret",
+    jwt_secret         => "ThisIsMyMonzoJWTSecret",
     clients            => {
         test_client => {
             client_secret => 'test_client_secret',
@@ -212,7 +212,7 @@ group {
 };
 
 # convenience methods for file upload emulation, these endpoints
-# do not exist in the Mondo API, they are here to fake uploads
+# do not exist in the Monzo API, they are here to fake uploads
 get '/file/:entity_id/:file_name' => sub {
     my ( $c ) = @_;
 
@@ -282,7 +282,7 @@ sub _transactions {
             "settled" => "2016-04-22T12:35:55.563Z",
             "account_id" => "acc_0000000000000000000001",
             "local_currency" => "GBP",
-            "category" => "mondo"
+            "category" => "monzo"
         },
         {
             "amount" => -1433,

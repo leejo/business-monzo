@@ -4,8 +4,8 @@ use strict;
 use warnings;
 
 use Mojolicious::Lite;
-use Business::Mondo;
-use Business::Mondo::Transaction;
+use Business::Monzo;
+use Business::Monzo::Transaction;
 use HTML::GoogleMaps::V3;
 use Mojo::JSON qw/ decode_json /;
 use File::Slurper qw/ read_text /;
@@ -55,18 +55,18 @@ sub _get_transactions {
 
 	my @transactions;
 
-	if ( $ENV{MONDOJO_TOKEN} && $ENV{MONDOJO_ACCOUNT_ID} ) {
+	if ( $ENV{MONZOJO_TOKEN} && $ENV{MONZOJO_ACCOUNT_ID} ) {
 
-		my $mondo = Business::Mondo->new( token => $ENV{MONDOJO_TOKEN} );
-		@transactions = $mondo->transactions( account_id => $ENV{MONDOJO_ACCOUNT_ID} );
+		my $monzo = Business::Monzo->new( token => $ENV{MONZOJO_TOKEN} );
+		@transactions = $monzo->transactions( account_id => $ENV{MONZOJO_ACCOUNT_ID} );
 
-	} elsif ( my $file = $ENV{MONDOJO_TEST_FILE} ) {
+	} elsif ( my $file = $ENV{MONZOJO_TEST_FILE} ) {
 		my $data = decode_json( Encode::encode( 'UTF-8',read_text( $file ) ) );
 
 		foreach my $e ( @{ $data->{transactions} // [] } ) {
-			push( @transactions,Business::Mondo::Transaction->new(
+			push( @transactions,Business::Monzo::Transaction->new(
 				%{ $e },
-				client => Business::Mondo->new->client,
+				client => Business::Monzo->new->client,
 			) );
 		}
 

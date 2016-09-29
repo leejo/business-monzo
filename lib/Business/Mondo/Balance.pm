@@ -1,12 +1,12 @@
-package Business::Mondo::Balance;
+package Business::Monzo::Balance;
 
 =head1 NAME
 
-Business::Mondo::Balance
+Business::Monzo::Balance
 
 =head1 DESCRIPTION
 
-A class for a Mondo balance, extends L<Business::Mondo::Resource>
+A class for a Monzo balance, extends L<Business::Monzo::Resource>
 
 =cut
 
@@ -14,12 +14,12 @@ use strict;
 use warnings;
 
 use Moo;
-extends 'Business::Mondo::Resource';
-with 'Business::Mondo::Utils';
-with 'Business::Mondo::Currency';
+extends 'Business::Monzo::Resource';
+with 'Business::Monzo::Utils';
+with 'Business::Monzo::Currency';
 
 use Types::Standard qw/ :all /;
-use Business::Mondo::Merchant;
+use Business::Monzo::Merchant;
 use DateTime::Format::DateParse;
 
 =head1 ATTRIBUTES
@@ -61,7 +61,7 @@ has [ qw/ url / ] => (
 =head2 get
 
 Returns a new instance of the object with the attributes populated
-having called the Mondo API
+having called the Monzo API
 
     $Balance = $Balance->get;
 
@@ -83,9 +83,9 @@ sub get {
 
 =head1 SEE ALSO
 
-L<Business::Mondo>
+L<Business::Monzo>
 
-L<Business::Mondo::Resource>
+L<Business::Monzo::Resource>
 
 =head1 AUTHOR
 
@@ -97,7 +97,7 @@ This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself. If you would like to contribute documentation,
 features, bug fixes, or anything else then please raise an issue / pull request:
 
-    https://github.com/leejo/business-mondo
+    https://github.com/leejo/business-monzo
 
 =cut
 

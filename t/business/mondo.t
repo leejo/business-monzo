@@ -9,21 +9,21 @@ use Test::MockObject;
 use Test::Exception;
 use Mojo::JSON qw/ decode_json /;
 
-# this makes Business::Mondo::Exception show a stack
+# this makes Business::Monzo::Exception show a stack
 # trace when any error is thrown so i don't have to keep
 # wrapping stuff in this test in evals to debug
-$ENV{MONDO_DEBUG} = 0;
+$ENV{MONZO_DEBUG} = 0;
 
-use_ok( 'Business::Mondo' );
+use_ok( 'Business::Monzo' );
 isa_ok(
-    my $Mondo = Business::Mondo->new(
+    my $Monzo = Business::Monzo->new(
         token => 'MvYX0i6snRh/1PXfPoc6',
     ),
-    'Business::Mondo'
+    'Business::Monzo'
 );
 
 can_ok(
-    $Mondo,
+    $Monzo,
     qw/
         token
         api_url
@@ -34,7 +34,7 @@ can_ok(
     /,
 );
 
-isa_ok( $Mondo->client,'Business::Mondo::Client' );
+isa_ok( $Monzo->client,'Business::Monzo::Client' );
 
 # monkey patching Mojo::UserAgent here to make this test work without
 # having to actually hit the endpoints or use credentials
@@ -50,77 +50,77 @@ $mock->mock( 'json',sub { $mock } );
 *Mojo::UserAgent::patch = sub { $mock };
 *Mojo::UserAgent::get = sub { $mock };
 
-test_transaction( $Mondo,$mock );
-test_account( $Mondo,$mock );
-test_balance( $Mondo,$mock );
-test_attachment( $Mondo,$mock );
+test_transaction( $Monzo,$mock );
+test_account( $Monzo,$mock );
+test_balance( $Monzo,$mock );
+test_attachment( $Monzo,$mock );
 
-*Business::Mondo::Client::_api_request = sub { shift; return shift };
+*Business::Monzo::Client::_api_request = sub { shift; return shift };
 
-is( $Mondo->client->api_get,'GET','api_get' );
-is( $Mondo->client->api_post,'POST','api_post' );
-is( $Mondo->client->api_delete,'DELETE','api_delete' );
-is( $Mondo->client->api_patch,'PATCH','api_patch' );
+is( $Monzo->client->api_get,'GET','api_get' );
+is( $Monzo->client->api_post,'POST','api_post' );
+is( $Monzo->client->api_delete,'DELETE','api_delete' );
+is( $Monzo->client->api_patch,'PATCH','api_patch' );
 
 done_testing();
 
 sub test_transaction {
 
-    my ( $Mondo,$mock ) = @_;
+    my ( $Monzo,$mock ) = @_;
 
     note( "Transaction" );
 
     $mock->mock( 'json',sub { _transaction_json() } );
 
     isa_ok(
-        my $Transaction = $Mondo->transaction( id => 1 ),
-        'Business::Mondo::Transaction'
+        my $Transaction = $Monzo->transaction( id => 1 ),
+        'Business::Monzo::Transaction'
     );
 
     $mock->mock( 'json',sub { _transactions_json() } );
 
     isa_ok(
-        $Transaction = ( $Mondo->transactions( account_id => 1 ) )[1],
-        'Business::Mondo::Transaction'
+        $Transaction = ( $Monzo->transactions( account_id => 1 ) )[1],
+        'Business::Monzo::Transaction'
     );
 }
 
 sub test_account {
 
-    my ( $Mondo,$mock ) = @_;
+    my ( $Monzo,$mock ) = @_;
 
     note( "Account" );
 
     $mock->mock( 'json',sub { _accounts_json() } );
 
     isa_ok(
-        my $Account = ( $Mondo->accounts )[1],
-        'Business::Mondo::Account'
+        my $Account = ( $Monzo->accounts )[1],
+        'Business::Monzo::Account'
     );
 }
 
 sub test_balance {
 
-    my ( $Mondo,$mock ) = @_;
+    my ( $Monzo,$mock ) = @_;
 
     $mock->mock( 'json',sub { _balance_json() } );
 
     isa_ok(
-        $Mondo->balance( account_id => 1 ),
-        'Business::Mondo::Balance'
+        $Monzo->balance( account_id => 1 ),
+        'Business::Monzo::Balance'
     );
 }
 
 sub test_attachment {
 
-    my ( $Mondo,$mock ) = @_;
+    my ( $Monzo,$mock ) = @_;
 
     isa_ok(
-        $Mondo->upload_attachment(
+        $Monzo->upload_attachment(
             file_name => 'foo.png',
             file_type => 'image/png',
         ),
-        'Business::Mondo::Attachment'
+        'Business::Monzo::Attachment'
     );
 }
 

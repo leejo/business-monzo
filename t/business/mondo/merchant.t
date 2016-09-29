@@ -8,15 +8,15 @@ use Test::Deep;
 use Test::Exception;
 use Mojo::JSON;
 
-use Business::Mondo::Client;
+use Business::Monzo::Client;
 
-$Business::Mondo::Resource::client = Business::Mondo::Client->new(
+$Business::Monzo::Resource::client = Business::Monzo::Client->new(
     token      => 'foo',
 );
 
-use_ok( 'Business::Mondo::Merchant' );
+use_ok( 'Business::Monzo::Merchant' );
 isa_ok(
-    my $Merchant = Business::Mondo::Merchant->new(
+    my $Merchant = Business::Monzo::Merchant->new(
         "emoji"    => "💵",
         "updated"  => "2016-04-23T09:22:45.005Z",
         "online"   => Mojo::JSON::false,
@@ -56,9 +56,9 @@ isa_ok(
             "short_formatted" => "Villars-sur-o, 1884, Switzerland",
             "postcode"        => "1884"
         },
-        'client' => Business::Mondo::Client->new( token => 'foo', ),
+        'client' => Business::Monzo::Client->new( token => 'foo', ),
     ),
-    'Business::Mondo::Merchant'
+    'Business::Monzo::Merchant'
 );
 
 can_ok(
@@ -89,22 +89,22 @@ can_ok(
 
 is(
     $Merchant->url,
-    'https://api.getmondo.co.uk/merchants/merch_0000000000000000000001',
+    'https://api.getmonzo.co.uk/merchants/merch_0000000000000000000001',
     'url'
 );
 
 throws_ok(
     sub { $Merchant->get },
-    'Business::Mondo::Exception'
+    'Business::Monzo::Exception'
 );
 
 is(
     $@->message,
-    'Mondo API does not currently support getting merchant data',
+    'Monzo API does not currently support getting merchant data',
     ' ... with expected message'
 );
 
-isa_ok( $Merchant->address,'Business::Mondo::Address' );
+isa_ok( $Merchant->address,'Business::Monzo::Address' );
 isa_ok( $Merchant->created,'DateTime' );
 
 ok( $Merchant->to_hash,'to_hash' );

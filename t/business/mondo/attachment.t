@@ -7,26 +7,26 @@ use Test::Most;
 use Test::Deep;
 use Test::Exception;
 
-use Business::Mondo::Client;
+use Business::Monzo::Client;
 
-$Business::Mondo::Resource::client = Business::Mondo::Client->new(
+$Business::Monzo::Resource::client = Business::Monzo::Client->new(
     token      => 'foo',
 );
 
-use_ok( 'Business::Mondo::Attachment' );
+use_ok( 'Business::Monzo::Attachment' );
 isa_ok(
-    my $Attachment = Business::Mondo::Attachment->new(
+    my $Attachment = Business::Monzo::Attachment->new(
         "id"          => "attach_00009237aqC8c5umZmrRdh",
         "created"     => "2015-08-22T12:20:18Z",
         "user_id"     => "user_00009238aMBIIrS5Rdncq9",
         "external_id" => "tx_00008zIcpb1TB4yeIFXMzx",
         "file_url"    => "https://foo/bar/user_00009237hliZellUicKuG1/LcCu4ogv1xW28OCcvOTL-foo.png",
         "file_type"   => "image/png",
-        'client'      => Business::Mondo::Client->new(
+        'client'      => Business::Monzo::Client->new(
             token      => 'foo',
         ),
     ),
-    'Business::Mondo::Attachment'
+    'Business::Monzo::Attachment'
 );
 
 can_ok(
@@ -50,7 +50,7 @@ can_ok(
 
 throws_ok(
     sub { $Attachment->upload },
-    'Business::Mondo::Exception'
+    'Business::Monzo::Exception'
 );
 
 is(
@@ -60,7 +60,7 @@ is(
 );
 
 no warnings 'redefine';
-*Business::Mondo::Client::api_post = sub { {
+*Business::Monzo::Client::api_post = sub { {
     file_url => 'http://baz',
     upload_url => 'http://boz',
 } };
@@ -69,7 +69,7 @@ isa_ok(
     $Attachment = $Attachment->upload(
         file_name => 'foo',file_type => 'bar'
     ),
-    'Business::Mondo::Attachment'
+    'Business::Monzo::Attachment'
 );
 
 is( $Attachment->file_name,'foo','->file_name' );
@@ -79,7 +79,7 @@ is( $Attachment->file_url,'http://baz','->file_url' );
 
 throws_ok(
     sub { $Attachment->register },
-    'Business::Mondo::Exception'
+    'Business::Monzo::Exception'
 );
 
 is(
@@ -88,7 +88,7 @@ is(
     ' ... with expected message'
 );
 
-*Business::Mondo::Client::api_post = sub { {
+*Business::Monzo::Client::api_post = sub { {
     "attachment" => {
         "id" => "attach_00009238aOAIvVqfb9LrZh",
         "user_id" => "user_00009238aMBIIrS5Rdncq9",
@@ -103,9 +103,9 @@ isa_ok( $Attachment = $Attachment->register(
     external_id => 1,
     file_url    => 'http://bar',
     file_type   => 'http://boz',
-),'Business::Mondo::Attachment','->register' );
+),'Business::Monzo::Attachment','->register' );
 
-*Business::Mondo::Client::api_post = sub { {} };
+*Business::Monzo::Client::api_post = sub { {} };
 ok( $Attachment->deregister,'->deregister' );
 
 ok( $Attachment->to_hash,'to_hash' );

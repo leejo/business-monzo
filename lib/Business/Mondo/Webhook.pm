@@ -1,12 +1,12 @@
-package Business::Mondo::Webhook;
+package Business::Monzo::Webhook;
 
 =head1 NAME
 
-Business::Mondo::Webhook
+Business::Monzo::Webhook
 
 =head1 DESCRIPTION
 
-A class for a Mondo webhook, extends L<Business::Mondo::Resource>
+A class for a Monzo webhook, extends L<Business::Monzo::Resource>
 
 =cut
 
@@ -14,10 +14,10 @@ use strict;
 use warnings;
 
 use Moo;
-extends 'Business::Mondo::Resource';
+extends 'Business::Monzo::Resource';
 
 use Types::Standard qw/ :all /;
-use Business::Mondo::Exception;
+use Business::Monzo::Exception;
 
 =head1 ATTRIBUTES
 
@@ -25,10 +25,10 @@ The Webhook class has the following attributes (with their type).
 
     id (Str)
     callback_url (Str)
-    account (Business::Mondo::Account)
+    account (Business::Monzo::Account)
 
 Note that when a Str is passed to ->account this will be coerced
-to a Business::Mondo::Account object.
+to a Business::Monzo::Account object.
 
 =cut
 
@@ -39,15 +39,15 @@ has [ qw/ id callback_url / ] => (
 
 has account => (
     is      => 'ro',
-    isa     => InstanceOf['Business::Mondo::Account'],
+    isa     => InstanceOf['Business::Monzo::Account'],
     coerce  => sub {
         my ( $args ) = @_;
 
         if ( ! ref( $args ) ) {
-            require Business::Mondo::Account;
-            $args = Business::Mondo::Account->new(
+            require Business::Monzo::Account;
+            $args = Business::Monzo::Account->new(
                 id     => $args,
-                client => $Business::Mondo::Resource::client,
+                client => $Business::Monzo::Resource::client,
             );
         }
 
@@ -71,16 +71,16 @@ sub delete {
 }
 
 sub get {
-    Business::Mondo::Exception->throw({
-        message => "Mondo API does not currently support getting webhook data",
+    Business::Monzo::Exception->throw({
+        message => "Monzo API does not currently support getting webhook data",
     });
 }
 
 =head1 SEE ALSO
 
-L<Business::Mondo>
+L<Business::Monzo>
 
-L<Business::Mondo::Resource>
+L<Business::Monzo::Resource>
 
 =head1 AUTHOR
 
@@ -92,7 +92,7 @@ This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself. If you would like to contribute documentation,
 features, bug fixes, or anything else then please raise an issue / pull request:
 
-    https://github.com/leejo/business-mondo
+    https://github.com/leejo/business-monzo
 
 =cut
 

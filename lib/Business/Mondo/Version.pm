@@ -1,12 +1,12 @@
-package Business::Mondo::Version;
+package Business::Monzo::Version;
 
 =head1 NAME
 
-Business::Mondo::Version
+Business::Monzo::Version
 
 =head1 DESCRIPTION
 
-A role for a Mondo version information.
+A role for a Monzo version information.
 
 =cut
 
@@ -15,9 +15,9 @@ use warnings;
 
 use Moo::Role;
 
-$Business::Mondo::VERSION     = '0.06';
-$Business::Mondo::API_VERSION = 'v1';
-$Business::Mondo::API_URL     = 'https://api.getmondo.co.uk';
+$Business::Monzo::VERSION     = '0.06';
+$Business::Monzo::API_VERSION = 'v1';
+$Business::Monzo::API_URL     = 'https://api.getmonzo.co.uk';
 
 =head1 AUTHOR
 
@@ -27,7 +27,7 @@ This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself. If you would like to contribute documentation,
 features, bug fixes, or anything else then please raise an issue / pull request:
 
-    https://github.com/leejo/business-mondo
+    https://github.com/leejo/business-monzo
 
 =cut
 

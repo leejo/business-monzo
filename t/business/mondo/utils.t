@@ -6,7 +6,7 @@ use warnings;
 package Utils::Tester;
 
 use Moo;
-with 'Business::Mondo::Utils';
+with 'Business::Monzo::Utils';
 
 package main;
 
@@ -15,7 +15,7 @@ use Test::Deep;
 use Test::Exception;
 use DateTime;
 
-use Business::Mondo::Utils;
+use Business::Monzo::Utils;
 
 my $Utils = Utils::Tester->new;
 

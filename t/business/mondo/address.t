@@ -7,15 +7,15 @@ use Test::Most;
 use Test::Deep;
 use Test::Exception;
 
-use Business::Mondo::Client;
+use Business::Monzo::Client;
 
-$Business::Mondo::Resource::client = Business::Mondo::Client->new(
+$Business::Monzo::Resource::client = Business::Monzo::Client->new(
     token      => 'foo',
 );
 
-use_ok( 'Business::Mondo::Address' );
+use_ok( 'Business::Monzo::Address' );
 isa_ok(
-    my $Address = Business::Mondo::Address->new(
+    my $Address = Business::Monzo::Address->new(
         "address"   => "98 Southgate Road",
         "city"      => "London",
         "country"   => "GB",
@@ -23,11 +23,11 @@ isa_ok(
         "longitude" => -0.08482400000002599,
         "postcode"  => "N1 3JD",
         "region"    => "Greater London",
-        'client'   => Business::Mondo::Client->new(
+        'client'   => Business::Monzo::Client->new(
             token      => 'foo',
         ),
     ),
-    'Business::Mondo::Address'
+    'Business::Monzo::Address'
 );
 
 can_ok(
@@ -51,23 +51,23 @@ can_ok(
 
 throws_ok(
     sub { $Address->get },
-    'Business::Mondo::Exception'
+    'Business::Monzo::Exception'
 );
 
 is(
     $@->message,
-    'Mondo API does not currently support getting address data',
+    'Monzo API does not currently support getting address data',
     ' ... with expected message'
 );
 
 throws_ok(
     sub { $Address->url },
-    'Business::Mondo::Exception'
+    'Business::Monzo::Exception'
 );
 
 is(
     $@->message,
-    'Mondo API does not currently support getting address data',
+    'Monzo API does not currently support getting address data',
     ' ... with expected message'
 );
 

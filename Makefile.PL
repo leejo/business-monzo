@@ -6,8 +6,8 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME             => 'Business::Mondo',
-    VERSION_FROM     => 'lib/Business/Mondo/Version.pm',
+    NAME             => 'Business::Monzo',
+    VERSION_FROM     => 'lib/Business/Monzo/Version.pm',
     AUTHOR           => 'Lee Johnson <leejo@cpan.org>',
     LICENSE          => 'perl',
     MIN_PERL_VERSION => '5.10.1',
@@ -32,14 +32,14 @@ WriteMakefile(
     META_MERGE => {
         resources => {
             license    => 'http://dev.perl.org/licenses/',
-            homepage   => 'https://metacpan.org/module/Business::Mondo',
-            bugtracker => 'https://github.com/leejo/business-mondo/issues',
-            repository => 'https://github.com/leejo/business-mondo'
+            homepage   => 'https://metacpan.org/module/Business::Monzo',
+            bugtracker => 'https://github.com/leejo/business-monzo/issues',
+            repository => 'https://github.com/leejo/business-monzo'
         },
         repository => {
             type => 'git',
-            url  => 'https://github.com/leejo/business-mondo.git',
-            web  => 'https://github.com/leejo/business-mondo',
+            url  => 'https://github.com/leejo/business-monzo.git',
+            web  => 'https://github.com/leejo/business-monzo',
         },
     },
     test => {

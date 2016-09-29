@@ -6,63 +6,63 @@ use warnings;
 use Test::Most;
 use Test::Deep;
 use Test::Exception;
-use Business::Mondo;
+use Business::Monzo;
 
 use FindBin qw/ $Bin /;
 
-plan skip_all => "MONDO_ENDTOEND required"
-    if ! $ENV{MONDO_ENDTOEND};
+plan skip_all => "MONZO_ENDTOEND required"
+    if ! $ENV{MONZO_ENDTOEND};
 
-# this is an "end to end" test - it will call the Mondo API
+# this is an "end to end" test - it will call the Monzo API
 # using the details defined in the ENV variables below.
 my ( $token,$url,$skip_cert ) = @ENV{qw/
-    MONDO_TOKEN
-    MONDO_URL
+    MONZO_TOKEN
+    MONZO_URL
     SKIP_CERT_CHECK
 /};
 
 $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = !$skip_cert;
 
-# this makes Business::Mondo::Exception show a stack
+# this makes Business::Monzo::Exception show a stack
 # trace when any error is thrown so i don't have to keep
 # wrapping stuff in this test in evals to debug
-$ENV{MONDO_DEBUG} = 1;
+$ENV{MONZO_DEBUG} = 1;
 
-note( "Mondo" );
-my $Mondo = Business::Mondo->new(
+note( "Monzo" );
+my $Monzo = Business::Monzo->new(
     token   => $token,
     ( $url ? ( api_url => $url ) : () ),
 );
 
-isa_ok( $Mondo,'Business::Mondo' );
+isa_ok( $Monzo,'Business::Monzo' );
 
 note( "Account" );
-my @accounts = $Mondo->accounts;
+my @accounts = $Monzo->accounts;
 
 isa_ok(
 	my $Account = $accounts[0],
-	'Business::Mondo::Account'
+	'Business::Monzo::Account'
 );
 
-my @transactions = $Mondo->transactions( account_id => $Account->id );
+my @transactions = $Monzo->transactions( account_id => $Account->id );
 
 isa_ok(
 	my $Transaction = $transactions[0],
-    'Business::Mondo::Transaction',
+    'Business::Monzo::Transaction',
 );
 
 note( "Transaction" );
 isa_ok(
-    $Transaction = $Mondo->transaction(
+    $Transaction = $Monzo->transaction(
 		id => $Transaction->id,
 		expand => 'merchant'
 	),
-    'Business::Mondo::Transaction'
+    'Business::Monzo::Transaction'
 );
 
 isa_ok(
     $Transaction->get,
-    'Business::Mondo::Transaction',
+    'Business::Monzo::Transaction',
 );
 
 my $time = time;
@@ -71,7 +71,7 @@ isa_ok(
     $Transaction = $Transaction->annotate(
 		testing_at => $time,
 	),
-    'Business::Mondo::Transaction',
+    'Business::Monzo::Transaction',
 );
 
 cmp_deeply(
@@ -83,7 +83,7 @@ cmp_deeply(
 );
 
 ok( $Account->add_feed_item(
-	url => 'https://metacpan.org/release/Business-Mondo',
+	url => 'https://metacpan.org/release/Business-Monzo',
 	params => {
 		title     => 'Hello from the perl API client',
 		image_url => 'http://pix.iemoji.com/images/emoji/apple/ios-9/256/dromedary-camel.png',
@@ -94,7 +94,7 @@ ok( $Account->add_feed_item(
 note( "Webhook" );
 isa_ok( my $Webhook = $Account->register_webhook(
     callback_url => 'http://www.foo.com',
-),'Business::Mondo::Webhook' );
+),'Business::Monzo::Webhook' );
 
 ok( my @webhooks = $Account->webhooks,'->webhooks' );
 
@@ -104,8 +104,8 @@ foreach $Webhook ( @webhooks ) {
 
 note( "Balance" );
 isa_ok(
-	my $Balance = $Mondo->balance( account_id => $Account->id ),
-	'Business::Mondo::Balance'
+	my $Balance = $Monzo->balance( account_id => $Account->id ),
+	'Business::Monzo::Balance'
 );
 
 like( $Balance->account_id,qr/acc_0000/,'->account_id' );
@@ -114,10 +114,10 @@ isa_ok( $Balance->currency,'Data::Currency','->currency' );
 is( $Balance->spend_today,0,'->spend_today' );
 
 note( "Attachment" );
-isa_ok( my $Attachment = $Mondo->upload_attachment(
+isa_ok( my $Attachment = $Monzo->upload_attachment(
 	file_name => 'foo.png',
 	file_type => 'image/png',
-),'Business::Mondo::Attachment' );
+),'Business::Monzo::Attachment' );
 
 is( $Attachment->file_name,'foo.png','->file_name' );
 is( $Attachment->file_type,'image/png','->file_type' );
@@ -128,7 +128,7 @@ isa_ok( $Attachment = $Attachment->register(
 	external_id => $Transaction->id,
 	file_url    => 'http://www.nyan.cat/cats/original.gif',
 	file_type   => 'image/gif',
-),'Business::Mondo::Attachment' );
+),'Business::Monzo::Attachment' );
 
 like( $Attachment->user_id,qr/user_/,'->user_id' );
 isa_ok( $Attachment->created,'DateTime' );

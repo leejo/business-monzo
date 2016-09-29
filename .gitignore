@@ -9,7 +9,7 @@
 *.old
 *.swp
 ~$
-/Business-Mondo*tar.gz
+/Business-Monzo*tar.gz
 cover_db
 end_to_end.sh
 examples/

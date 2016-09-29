@@ -8,17 +8,17 @@ use Test::Deep;
 use Test::Exception;
 use Mojo::JSON;
 
-use Business::Mondo::Client;
+use Business::Monzo::Client;
 
-use_ok( 'Business::Mondo::Transaction' );
+use_ok( 'Business::Monzo::Transaction' );
 isa_ok(
-    my $Transaction = Business::Mondo::Transaction->new(
+    my $Transaction = Business::Monzo::Transaction->new(
         'id'              => 1,
-        'client'          => Business::Mondo::Client->new(
+        'client'          => Business::Monzo::Client->new(
             token      => 'foo',
         ),
     ),
-    'Business::Mondo::Transaction'
+    'Business::Monzo::Transaction'
 );
 
 can_ok(
@@ -54,19 +54,19 @@ can_ok(
     /,
 );
 
-is( $Transaction->url,'https://api.getmondo.co.uk/transactions/1','url' );
+is( $Transaction->url,'https://api.getmonzo.co.uk/transactions/1','url' );
 
 no warnings 'redefine';
 
-*Business::Mondo::Client::api_get = sub { _transaction() };
+*Business::Monzo::Client::api_get = sub { _transaction() };
 
 ok( $Transaction = $Transaction->get,'->get' );
-isa_ok( $Transaction->merchant,'Business::Mondo::Merchant' );
-isa_ok( $Transaction->merchant->address,'Business::Mondo::Address' );
+isa_ok( $Transaction->merchant,'Business::Monzo::Merchant' );
+isa_ok( $Transaction->merchant->address,'Business::Monzo::Address' );
 isa_ok( $Transaction->currency,'Data::Currency' );
 isa_ok( $Transaction->created,'DateTime' );
 
-*Business::Mondo::Client::api_patch = sub { _transaction( $_[2] ) };
+*Business::Monzo::Client::api_patch = sub { _transaction( $_[2] ) };
 ok( $Transaction = $Transaction->annotate( foo => 1, bar => 2 ),'->annotate' );
 cmp_deeply(
     $Transaction->annotations,
@@ -76,7 +76,7 @@ cmp_deeply(
 
 isa_ok(
     $Transaction->attachments->[1],
-    'Business::Mondo::Attachment',
+    'Business::Monzo::Attachment',
 );
 
 ok( $Transaction->to_hash,'to_hash' );

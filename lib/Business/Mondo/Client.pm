@@ -1,12 +1,12 @@
-package Business::Mondo::Client;
+package Business::Monzo::Client;
 
 =head1 NAME
 
-Business::Mondo::Client
+Business::Monzo::Client
 
 =head1 DESCRIPTION
 
-This is a class for the lower level requests to the Mondo API. generally
+This is a class for the lower level requests to the Monzo API. generally
 there is nothing you should be doing with this.
 
 =cut
@@ -15,12 +15,12 @@ use strict;
 use warnings;
 
 use Moo;
-with 'Business::Mondo::Utils';
-with 'Business::Mondo::Version';
+with 'Business::Monzo::Utils';
+with 'Business::Monzo::Version';
 
-use Business::Mondo::Exception;
-use Business::Mondo::Transaction;
-use Business::Mondo::Account;
+use Business::Monzo::Exception;
+use Business::Monzo::Transaction;
+use Business::Monzo::Account;
 
 use Data::Dumper;
 use Mojo::UserAgent;
@@ -31,16 +31,16 @@ use Carp qw/ carp /;
 
 =head2 token
 
-Your Mondo access token, this is required
+Your Monzo access token, this is required
 
 =head2 api_url
 
-The Mondo url, which will default to https://api.getmondo.co.uk
+The Monzo url, which will default to https://api.getmonzo.co.uk
 
 =head2 user_agent
 
-The user agent string used in requests to the mondo API, defaults to
-business-mondo/perl/v . $version_of_this_library.
+The user agent string used in requests to the monzo API, defaults to
+business-monzo/perl/v . $version_of_this_library.
 
 =cut
 
@@ -53,7 +53,7 @@ has api_url => (
     is       => 'ro',
     required => 0,
     default  => sub {
-        return $ENV{MONDO_URL} || $Business::Mondo::API_URL;
+        return $ENV{MONZO_URL} || $Business::Monzo::API_URL;
     },
 );
 
@@ -61,7 +61,7 @@ has user_agent => (
     is      => 'ro',
     default => sub {
         # probably want more infoin here, version of perl, platform, and such
-        return "business-mondo/perl/v" . $Business::Mondo::VERSION;
+        return "business-monzo/perl/v" . $Business::Monzo::VERSION;
     }
 );
 
@@ -70,7 +70,7 @@ sub _get_transaction {
 
     my $data = $self->_api_request( 'GET',"transactions/" . $params->{id} );
 
-    my $transaction = Business::Mondo::Transaction->new(
+    my $transaction = Business::Monzo::Transaction->new(
         client => $self,
         %{ $data->{transaction} },
     );
@@ -91,7 +91,7 @@ sub _get_entities {
 
     my $plural = $entity . 's';
     my $data   = $self->_api_request( 'GET',$plural,$params );
-    my $class  = "Business::Mondo::" . ucfirst( $entity );
+    my $class  = "Business::Monzo::" . ucfirst( $entity );
     my @objects;
 
     foreach my $e ( @{ $data->{$plural} // [] } ) {
@@ -108,7 +108,7 @@ sub _get_entities {
     api_delete
     api_patch
 
-Make a request to the Mondo API:
+Make a request to the Monzo API:
 
     my $data = $Client->api_get( 'location',\%params );
 
@@ -141,7 +141,7 @@ sub _api_request {
     my ( $self,$method,$path,$params ) = @_;
 
     carp( "$method -> $path" )
-        if $ENV{MONDO_DEBUG};
+        if $ENV{MONZO_DEBUG};
 
     my $ua = Mojo::UserAgent->new;
     $ua->transactor->name( $self->user_agent );
@@ -155,10 +155,10 @@ sub _api_request {
     $path = $path =~ /^http/ ? $path : join( '/',$self->api_url,$path );
 
     carp( "PATH: $path" )
-        if $ENV{MONDO_DEBUG};
+        if $ENV{MONZO_DEBUG};
 
     carp( "PARAMS: " . Dumper $params )
-        if $ENV{MONDO_DEBUG};
+        if $ENV{MONZO_DEBUG};
 
     my %headers = (
         'Authorization' => "Bearer " . $self->token,
@@ -173,7 +173,7 @@ sub _api_request {
 
     if ( $tx->success ) {
         carp( "RES: " . Dumper $tx->res->json )
-            if $ENV{MONDO_DEBUG};
+            if $ENV{MONZO_DEBUG};
 
         return $tx->res->json;
     }
@@ -181,9 +181,9 @@ sub _api_request {
         my $error = $tx->error;
 
         carp( "ERROR: " . Dumper $error )
-            if $ENV{MONDO_DEBUG};
+            if $ENV{MONZO_DEBUG};
 
-        Business::Mondo::Exception->throw({
+        Business::Monzo::Exception->throw({
             message  => $error->{message},
             code     => $error->{code},
             response => $tx->res->body,
@@ -209,7 +209,7 @@ This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself. If you would like to contribute documentation,
 features, bug fixes, or anything else then please raise an issue / pull request:
 
-    https://github.com/leejo/business-mondo
+    https://github.com/leejo/business-monzo
 
 =cut
 

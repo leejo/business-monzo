@@ -7,23 +7,23 @@ use Test::Most;
 use Test::Deep;
 use Test::Exception;
 
-use Business::Mondo::Client;
+use Business::Monzo::Client;
 
-$Business::Mondo::Resource::client = Business::Mondo::Client->new(
+$Business::Monzo::Resource::client = Business::Monzo::Client->new(
     token      => 'foo',
 );
 
-use_ok( 'Business::Mondo::Account' );
+use_ok( 'Business::Monzo::Account' );
 isa_ok(
-    my $Account = Business::Mondo::Account->new(
+    my $Account = Business::Monzo::Account->new(
         "id"          => "acc_00009237aqC8c5umZmrRdh",
         "description" => "Peter Pan's Account",
         "created"     => "2015-08-22T12:20:18Z",
-        'client'      => Business::Mondo::Client->new(
+        'client'      => Business::Monzo::Client->new(
             token      => 'foo',
         ),
     ),
-    'Business::Mondo::Account'
+    'Business::Monzo::Account'
 );
 
 can_ok(
@@ -43,29 +43,29 @@ can_ok(
 
 throws_ok(
     sub { $Account->get },
-    'Business::Mondo::Exception'
+    'Business::Monzo::Exception'
 );
 
 is(
     $@->message,
-    'Mondo API does not currently support getting account data',
+    'Monzo API does not currently support getting account data',
     ' ... with expected message'
 );
 
 throws_ok(
     sub { $Account->url },
-    'Business::Mondo::Exception'
+    'Business::Monzo::Exception'
 );
 
 is(
     $@->message,
-    'Mondo API does not currently support getting account data',
+    'Monzo API does not currently support getting account data',
     ' ... with expected message'
 );
 
 throws_ok(
     sub { $Account->add_feed_item },
-    'Business::Mondo::Exception'
+    'Business::Monzo::Exception'
 );
 
 is(
@@ -75,7 +75,7 @@ is(
 );
 
 no warnings 'redefine';
-*Business::Mondo::Client::api_post = sub { {} };
+*Business::Monzo::Client::api_post = sub { {} };
 
 ok( $Account->add_feed_item(
     params => {
@@ -90,7 +90,7 @@ ok( $Account->add_feed_item(
 
 throws_ok(
     sub { $Account->register_webhook },
-    'Business::Mondo::Exception'
+    'Business::Monzo::Exception'
 );
 
 is(
@@ -99,7 +99,7 @@ is(
     ' ... with expected message'
 );
 
-*Business::Mondo::Client::api_post = sub { {
+*Business::Monzo::Client::api_post = sub { {
     webhook => {
         account_id => $Account->id,
         id         => "webhook_id",
@@ -109,7 +109,7 @@ is(
 
 isa_ok(
     my $Webhook = $Account->register_webhook( callback_url => 'https://foo' ),
-    'Business::Mondo::Webhook',
+    'Business::Monzo::Webhook',
     '->register_webhook'
 );
 
@@ -117,7 +117,7 @@ is( $Webhook->account,$Account,'->account' );
 is( $Webhook->id,'webhook_id','->id' );
 is( $Webhook->callback_url,'https://foo','->callback_url' );
 
-*Business::Mondo::Client::api_get = sub { {
+*Business::Monzo::Client::api_get = sub { {
     webhooks => [
         {
             account_id => $Account->id,
@@ -139,7 +139,7 @@ ok( $Account->to_hash,'to_hash' );
 ok( $Account->as_json,'as_json' );
 ok( $Account->TO_JSON,'TO_JSON' );
 
-*Business::Mondo::Client::api_get = sub {
+*Business::Monzo::Client::api_get = sub {
     {
         "balance"     => 5000,
         "currency"    => 'GBP',
@@ -147,7 +147,7 @@ ok( $Account->TO_JSON,'TO_JSON' );
     };
 };
 
-isa_ok( $Account->balance,'Business::Mondo::Balance' );
+isa_ok( $Account->balance,'Business::Monzo::Balance' );
 
 done_testing();
 

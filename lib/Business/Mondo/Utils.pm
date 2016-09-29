@@ -1,12 +1,12 @@
-package Business::Mondo::Utils;
+package Business::Monzo::Utils;
 
 =head1 NAME
 
-Business::Mondo::Utils
+Business::Monzo::Utils
 
 =head1 DESCRIPTION
 
-A role containing Mondo utilities.
+A role containing Monzo utilities.
 
 =cut
 
@@ -20,7 +20,7 @@ use Moo::Role;
 =head2 normalize_params
 
 Normalizes the passed params hash into a string for use in queries to the
-Mondo API. If a second true value is passed this will includes RFC5849
+Monzo API. If a second true value is passed this will includes RFC5849
 encoding and will convert DateTime objects into the corresponding ISO8601
 string
 
@@ -74,7 +74,7 @@ This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself. If you would like to contribute documentation,
 features, bug fixes, or anything else then please raise an issue / pull request:
 
-    https://github.com/leejo/business-mondo
+    https://github.com/leejo/business-monzo
 
 =cut
 

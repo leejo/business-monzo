@@ -7,17 +7,17 @@ use Test::Most;
 use Test::Deep;
 use Test::Exception;
 
-use Business::Mondo::Client;
+use Business::Monzo::Client;
 
-use_ok( 'Business::Mondo::Balance' );
+use_ok( 'Business::Monzo::Balance' );
 isa_ok(
-    my $Balance = Business::Mondo::Balance->new(
+    my $Balance = Business::Monzo::Balance->new(
         'account_id'      => 1,
-        'client'          => Business::Mondo::Client->new(
+        'client'          => Business::Monzo::Client->new(
             token      => 'foo',
         ),
     ),
-    'Business::Mondo::Balance'
+    'Business::Monzo::Balance'
 );
 
 can_ok(
@@ -36,11 +36,11 @@ can_ok(
     /,
 );
 
-is( $Balance->url,'https://api.getmondo.co.uk/balance?account_id=1','url' );
+is( $Balance->url,'https://api.getmonzo.co.uk/balance?account_id=1','url' );
 
 no warnings 'redefine';
 
-*Business::Mondo::Client::api_get = sub {
+*Business::Monzo::Client::api_get = sub {
     {
         "balance"     => 5000,
         "currency"    => 'GBP',

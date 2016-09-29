@@ -11,7 +11,7 @@ fi
 set -u
 
 # start emulator
-morbo mondo_emulator.pl -l "https://*:$port" &
+morbo monzo_emulator.pl -l "https://*:$port" &
 sleep 2;
 
 # get an access token
@@ -25,12 +25,12 @@ ACCESS_TOKEN=$(http --verify no --form POST "https://127.0.0.1:$port/oauth2/toke
 )
 
 # run end_to_end tests
-MONDO_DEBUG=1 \
-    MONDO_ENDTOEND=1 \
-    MONDO_TOKEN=$ACCESS_TOKEN \
-    MONDO_URL="https://127.0.0.1:$port" \
+MONZO_DEBUG=1 \
+    MONZO_ENDTOEND=1 \
+    MONZO_TOKEN=$ACCESS_TOKEN \
+    MONZO_URL="https://127.0.0.1:$port" \
     SKIP_CERT_CHECK=1 \
     prove -v -Ilib t/002_end_to_end.t
 
 # stop emulator
-pkill -lf 'mondo_emulator';
+pkill -lf 'monzo_emulator';

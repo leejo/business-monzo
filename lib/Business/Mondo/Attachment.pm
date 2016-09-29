@@ -1,12 +1,12 @@
-package Business::Mondo::Attachment;
+package Business::Monzo::Attachment;
 
 =head1 NAME
 
-Business::Mondo::Attachment
+Business::Monzo::Attachment
 
 =head1 DESCRIPTION
 
-A class for a Mondo attachment, extends L<Business::Mondo::Resource>
+A class for a Monzo attachment, extends L<Business::Monzo::Resource>
 
 =cut
 
@@ -14,12 +14,12 @@ use strict;
 use warnings;
 
 use Moo;
-extends 'Business::Mondo::Resource';
-with 'Business::Mondo::Utils';
+extends 'Business::Monzo::Resource';
+with 'Business::Monzo::Utils';
 
 use Types::Standard qw/ :all /;
 use DateTime::Format::DateParse;
-use Business::Mondo::Exception;
+use Business::Monzo::Exception;
 
 =head1 ATTRIBUTES
 
@@ -71,7 +71,7 @@ has created => (
 =head2 upload
 
 Gets the upload_url and file_url for the given file_name and file_type.
-Returns a new L<Business::Mondo::Attachment> object with the attributes
+Returns a new L<Business::Monzo::Attachment> object with the attributes
 file_name, file_type, file_url, and upload_url populated. Note the
 required parameters:
 
@@ -89,7 +89,7 @@ sub upload {
     my ( $self,%params ) = @_;
 
     $params{file_name} && $params{file_type} ||
-        Business::Mondo::Exception->throw({
+        Business::Monzo::Exception->throw({
             message => "upload requires params: file_name, file_type",
         });
 
@@ -109,7 +109,7 @@ sub upload {
 =head2 register
 
 Registers an attachment against an entity (transaction, etc). Returns
-a new Business::Mondo::Attachment object with the details populated
+a new Business::Monzo::Attachment object with the details populated
 
     my $file_details = $Attachment->webhooks(
         # the following are REQUIRED if not set on $Attachment
@@ -118,7 +118,7 @@ a new Business::Mondo::Attachment object with the details populated
 
         # one of the following REQUIRED:
         external_id => $id,
-        entity      => $object # Business::Mondo:: - Transaction, Account, etc
+        entity      => $object # Business::Monzo:: - Transaction, Account, etc
     );
 
 =cut
@@ -134,7 +134,7 @@ sub register {
     $params{file_type} //= $self->file_type;
 
     $params{external_id} && $params{file_url} && $params{file_type} ||
-        Business::Mondo::Exception->throw({
+        Business::Monzo::Exception->throw({
             message => "register requires params: external_id, file_name, file_type",
         });
 
@@ -170,9 +170,9 @@ sub deregister {
 
 =head1 SEE ALSO
 
-L<Business::Mondo>
+L<Business::Monzo>
 
-L<Business::Mondo::Resource>
+L<Business::Monzo::Resource>
 
 =head1 AUTHOR
 
@@ -184,7 +184,7 @@ This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself. If you would like to contribute documentation,
 features, bug fixes, or anything else then please raise an issue / pull request:
 
-    https://github.com/leejo/business-mondo
+    https://github.com/leejo/business-monzo
 
 =cut
 
