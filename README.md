@@ -11,7 +11,7 @@ Business::Monzo - Perl library for interacting with the Monzo API
 
 # VERSION
 
-0.06
+0.07
 
 # DESCRIPTION
 

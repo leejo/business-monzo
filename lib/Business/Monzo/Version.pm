@@ -15,7 +15,7 @@ use warnings;
 
 use Moo::Role;
 
-$Business::Monzo::VERSION     = '0.06';
+$Business::Monzo::VERSION     = '0.07';
 $Business::Monzo::API_VERSION = 'v1';
 $Business::Monzo::API_URL     = 'https://api.getmonzo.co.uk';
 
