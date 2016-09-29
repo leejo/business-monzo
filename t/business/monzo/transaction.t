@@ -54,7 +54,7 @@ can_ok(
     /,
 );
 
-is( $Transaction->url,'https://api.getmonzo.co.uk/transactions/1','url' );
+is( $Transaction->url,'https://api.monzo.com/transactions/1','url' );
 
 no warnings 'redefine';
 

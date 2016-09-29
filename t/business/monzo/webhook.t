@@ -52,7 +52,7 @@ is(
     ' ... with expected message'
 );
 
-is( $Webhook->url,'https://api.getmonzo.co.uk/webhooks/webhook_id_123','->url' );
+is( $Webhook->url,'https://api.monzo.com/webhooks/webhook_id_123','->url' );
 
 no warnings 'redefine';
 *Business::Monzo::Client::api_delete = sub { {} };

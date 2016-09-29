@@ -3,7 +3,7 @@ package Business::Monzo;
 =head1 NAME
 
 Business::Monzo - Perl library for interacting with the Monzo API
-(https://api.getmonzo.co.uk)
+(https://api.monzo.com)
 
 =for html
 <a href='https://travis-ci.org/leejo/business-monzo?branch=master'><img src='https://travis-ci.org/leejo/business-monzo.svg?branch=master' alt='Build Status' /></a>
@@ -17,7 +17,7 @@ Business::Monzo - Perl library for interacting with the Monzo API
 
 Business::Monzo is a library for easy interface to the Monzo banking API,
 it implements all of the functionality currently found in the service's API
-documentation: L<https://getmonzo.co.uk/docs>
+documentation: L<https://monzo.com/docs>
 
 B<You should refer to the official Monzo API documentation in conjunction>
 B<with this perldoc>, as the official API documentation explains in more depth
@@ -145,7 +145,7 @@ Your Monzo access token, this is required
 
 =head2 api_url
 
-The Monzo url, which will default to https://api.getmonzo.co.uk
+The Monzo url, which will default to https://api.monzo.com
 
 =head2 client
 

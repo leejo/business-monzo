@@ -35,7 +35,7 @@ Your Monzo access token, this is required
 
 =head2 api_url
 
-The Monzo url, which will default to https://api.getmonzo.co.uk
+The Monzo url, which will default to https://api.monzo.com
 
 =head2 user_agent
 

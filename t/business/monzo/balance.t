@@ -36,7 +36,7 @@ can_ok(
     /,
 );
 
-is( $Balance->url,'https://api.getmonzo.co.uk/balance?account_id=1','url' );
+is( $Balance->url,'https://api.monzo.com/balance?account_id=1','url' );
 
 no warnings 'redefine';
 

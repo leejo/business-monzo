@@ -89,7 +89,7 @@ can_ok(
 
 is(
     $Merchant->url,
-    'https://api.getmonzo.co.uk/merchants/merch_0000000000000000000001',
+    'https://api.monzo.com/merchants/merch_0000000000000000000001',
     'url'
 );
 
