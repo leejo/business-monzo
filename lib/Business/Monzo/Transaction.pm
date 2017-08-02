@@ -196,7 +196,8 @@ sub BUILD {
         my $currency_accessor = "${c}currency";
 
         if ( my $amount = $self->$amount_accessor ) {
-            my $decimal_precision = decimal_precision( $self->$currency_accessor->code );
+            # not all currencies have sub units, so default to 0 for exponent
+            my $decimal_precision = decimal_precision( $self->$currency_accessor->code ) // 0;
             my $value = $amount / ( 10 ** $decimal_precision );
             $self->$currency_accessor->value( $value );
         }
