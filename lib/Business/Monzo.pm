@@ -107,10 +107,10 @@ appropriate error catching code (ideally a module from CPAN):
         say $e->response; # HTTP status message
 
         # ->request may not always be present
-        say $e->request->{path}    if $e->request
-        say $e->request->{params}  if $e->request
-        say $e->request->{headers} if $e->request
-        say $e->request->{content} if $e->request
+        say $e->request->{path}    if $e->request;
+        say $e->request->{params}  if $e->request;
+        say $e->request->{headers} if $e->request;
+        say $e->request->{content} if $e->request;
     }
     catch ( $e ) {
         # some other failure?
