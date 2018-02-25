@@ -3,11 +3,8 @@
 Business::Monzo - Perl library for interacting with the Monzo API
 (https://api.monzo.com)
 
-<div>
-
-    <a href='https://travis-ci.org/leejo/business-monzo?branch=master'><img src='https://travis-ci.org/leejo/business-monzo.svg?branch=master' alt='Build Status' /></a>
-    <a href='https://coveralls.io/r/leejo/business-monzo?branch=master'><img src='https://coveralls.io/repos/leejo/business-monzo/badge.png?branch=master' alt='Coverage Status' /></a>
-</div>
+[![Build Status](https://travis-ci.org/leejo/business-monzo.svg?branch=master)](https://travis-ci.org/leejo/business-monzo?branch=master)
+[![Coverage Status](https://coveralls.io/repos/leejo/business-monzo/badge.png?branch=master)](https://coveralls.io/r/leejo/business-monzo?branch=master)
 
 # VERSION
 
@@ -177,6 +174,13 @@ Get a transaction. Will return a [Business::Monzo::Transaction](https://metacpan
 Get a list of accounts. Will return a list of [Business::Monzo::Account](https://metacpan.org/pod/Business::Monzo::Account)
 objects
 
+## pots
+
+    $monzo->pots;
+
+Get a list of pots. Will return a list of [Business::Monzo::Pot](https://metacpan.org/pod/Business::Monzo::Pot)
+objects
+
 # EXAMPLES
 
 See the t/002\_end\_to\_end.t test included with this distribution. you can run
@@ -194,6 +198,8 @@ is advised, don't run it against a live endpoint).
 [Business::Monzo::Transaction](https://metacpan.org/pod/Business::Monzo::Transaction)
 
 [Business::Monzo::Webhook](https://metacpan.org/pod/Business::Monzo::Webhook)
+
+[Business::Monzo::Pot](https://metacpan.org/pod/Business::Monzo::Pot)
 
 # AUTHOR
 

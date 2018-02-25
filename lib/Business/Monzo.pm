@@ -78,6 +78,9 @@ will, for the most part, return new instances of objects.
         $Webhook->delete
     }
 
+    # pots
+    my @pots = $monzo->pots();
+
     # attachments
     my $Attachment = $monzo->upload_attachment(
         file_name => 'foo.png',
@@ -137,6 +140,7 @@ use Carp qw/ confess /;
 
 use Business::Monzo::Client;
 use Business::Monzo::Account;
+use Business::Monzo::Pot;
 use Business::Monzo::Attachment;
 
 =head1 ATTRIBUTES
@@ -276,6 +280,20 @@ objects
 sub accounts {
     my ( $self ) = @_;
     return $self->client->_get_accounts;
+}
+
+=head2 pots
+
+    $monzo->pots;
+
+Get a list of pots. Will return a list of L<Business::Monzo::Pot>
+objects
+
+=cut
+
+sub pots {
+    my ( $self ) = @_;
+    return $self->client->_get_pots;
 }
 
 sub upload_attachment {
