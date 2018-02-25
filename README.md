@@ -177,6 +177,13 @@ Get a transaction. Will return a [Business::Monzo::Transaction](https://metacpan
 Get a list of accounts. Will return a list of [Business::Monzo::Account](https://metacpan.org/pod/Business::Monzo::Account)
 objects
 
+## pots
+
+    $monzo->pots;
+
+Get a list of pots. Will return a list of [Business::Monzo::Pot](https://metacpan.org/pod/Business::Monzo::Pot)
+objects
+
 # EXAMPLES
 
 See the t/002\_end\_to\_end.t test included with this distribution. you can run
@@ -194,6 +201,8 @@ is advised, don't run it against a live endpoint).
 [Business::Monzo::Transaction](https://metacpan.org/pod/Business::Monzo::Transaction)
 
 [Business::Monzo::Webhook](https://metacpan.org/pod/Business::Monzo::Webhook)
+
+[Business::Monzo::Pot](https://metacpan.org/pod/Business::Monzo::Pot)
 
 # AUTHOR
 
