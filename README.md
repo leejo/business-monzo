@@ -3,11 +3,8 @@
 Business::Monzo - Perl library for interacting with the Monzo API
 (https://api.monzo.com)
 
-<div>
-
-    <a href='https://travis-ci.org/leejo/business-monzo?branch=master'><img src='https://travis-ci.org/leejo/business-monzo.svg?branch=master' alt='Build Status' /></a>
-    <a href='https://coveralls.io/r/leejo/business-monzo?branch=master'><img src='https://coveralls.io/repos/leejo/business-monzo/badge.png?branch=master' alt='Coverage Status' /></a>
-</div>
+[![Build Status](https://travis-ci.org/leejo/business-monzo.svg?branch=master)](https://travis-ci.org/leejo/business-monzo?branch=master)
+[![Coverage Status](https://coveralls.io/repos/leejo/business-monzo/badge.png?branch=master)](https://coveralls.io/r/leejo/business-monzo?branch=master)
 
 # VERSION
 
