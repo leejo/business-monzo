@@ -36,6 +36,7 @@ can_ok(
         balance
         created
         updated
+        deleted
     /,
 );
 
