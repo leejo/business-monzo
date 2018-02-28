@@ -270,7 +270,9 @@ sub transaction {
 
 =head2 accounts
 
-    $monzo->accounts;
+    $monzo->accounts;                                   # all accounts
+    $monzo->accounts( account_type => "uk_prepaid" );   # prepaid accounts
+    $monzo->accounts( account_type => "uk_retail" );    # current accounts
 
 Get a list of accounts. Will return a list of L<Business::Monzo::Account>
 objects
@@ -278,8 +280,8 @@ objects
 =cut
 
 sub accounts {
-    my ( $self ) = @_;
-    return $self->client->_get_accounts;
+    my ( $self,%params ) = @_;
+    return $self->client->_get_accounts( \%params );
 }
 
 =head2 pots
