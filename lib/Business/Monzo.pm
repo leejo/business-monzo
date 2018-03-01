@@ -11,7 +11,7 @@ Business::Monzo - Perl library for interacting with the Monzo API
 
 =head1 VERSION
 
-0.11
+0.12
 
 =head1 DESCRIPTION
 
@@ -134,7 +134,7 @@ use warnings;
 use Moo;
 with 'Business::Monzo::Version';
 
-$Business::Monzo::VERSION = '0.11';
+$Business::Monzo::VERSION = '0.12';
 
 use Carp qw/ confess /;
 
@@ -223,7 +223,7 @@ sub transactions {
     return Business::Monzo::Account->new(
         client => $self->client,
         id     => $params{account_id},
-    )->transactions( 'expand[]' => 'merchant' );
+    )->transactions( 'expand[]' => 'merchant',%params );
 }
 
 =head2 balance
@@ -306,11 +306,38 @@ sub upload_attachment {
     )->upload( %params );
 }
 
+=head1 PAGINATION
+
+As per the Monzo docs: L<https://monzo.com/docs/#pagination> - you can pass
+through arguments to the methods (e.g. C<transactions>) to limit the return
+data or set date ranges, etc:
+
+    # last three months transactions, but only show 5
+    my $since = DateTime->now->subtract( months => 3 )->iso8601 . "Z";
+    my $limit = 5;
+
+    foreach my $transaction (
+        $monzo->transactions(
+            account_id => $account_id,
+            limit      => $limit,
+            since      => $since,
+        )
+    {
+        ...
+    }
+
+The supported pagination keys are C<limit>, C<since>, and C<before> - where
+C<since> can be an RFC 3339-encoded timestamp or an object id, and C<before>
+can be an RFC 3339-encoded timestamp. C<limit> should always be an integer.
+
 =head1 EXAMPLES
 
 See the t/002_end_to_end.t test included with this distribution. you can run
 this test against the Monzo emulator by running end_to_end_emulated.sh (this
 is advised, don't run it against a live endpoint).
+
+You can also see the scripts in the bin/ directory included in this dist for
+more examples.
 
 =head1 SEE ALSO
 
@@ -327,6 +354,12 @@ L<Business::Monzo::Webhook>
 =head1 AUTHOR
 
 Lee Johnson - C<leejo@cpan.org>
+
+With contributions from:
+
+    Chris Merry
+    Aaron Moses
+    Dave Cross
 
 =head1 LICENSE
 

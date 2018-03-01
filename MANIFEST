@@ -4,6 +4,7 @@ MANIFEST
 README.md
 end_to_end_emulated.sh
 bin/monzojo
+bin/monzo_transactions
 lib/Business/Monzo.pm
 lib/Business/Monzo/Account.pm
 lib/Business/Monzo/Address.pm
